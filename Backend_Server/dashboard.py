@@ -1,13 +1,28 @@
 from flask import Flask, request, jsonify
 import pyodbc
 
-conn_str = 'DRIVER={ODBC Driver 11 for SQL Server};SERVER=MSI\SQLEXPRESS;DATABASE=Prj;UID=sa;PWD=123456'
-conn = pyodbc.connect(conn_str)
+# Connect to SQL Server database info
+SERVER = 'DUYNGUYEN\SQLEXPRESS'
+DATABASE = 'Project'
+USERNAME = 'sa'
+PASSWORD = '123456'
+
+# Connection string
+connectionString = f'''
+DRIVER={{ODBC Driver 18 for SQL Server}};
+SERVER={SERVER};DATABASE={DATABASE};
+UID={USERNAME};
+PWD={PASSWORD};
+Encrypt=no;
+'''
+
+conn = pyodbc.connect(connectionString)
 cursor = conn.cursor()
 
 def show_dash_board():
+    print('Show dashboard')
     query = """
-            SELECT Name, Images
+            SELECT title, Image
             FROM Test
             """
     cursor.execute(query)
@@ -28,7 +43,7 @@ def show_detail(test):
     query = """
             SELECT *
             FROM Test
-            WHERE Name = ?
+            WHERE title = ?
             """
     cursor.execute(query, test)
     exam = cursor.fetchall()
@@ -36,15 +51,19 @@ def show_detail(test):
 
 app = Flask(__name__)
 
+@app.route('/dashboard/Item', methods = ['GET'])
+def show():
+    id = request.args.get('id')
+    print(f'Test name: {id}')
+    msg = show_detail(id)
+    return msg
+
 @app.route('/dashboard', methods = ['GET'])
 def dash_board():
     msg = show_dash_board()
     return msg
 
-@app.route('/dashboard/<test>', methods = ['GET'])
-def show(test):
-    msg = show_detail(test)
-    return msg
+
 
 if __name__ == '__main__':
     app.run(debug=True)

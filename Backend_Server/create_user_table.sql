@@ -62,15 +62,36 @@ SELECT * FROM Explaination;
 DROP TABLE Test;
 
 CREATE TABLE Test (
-        test_id VARCHAR(50) PRIMARY KEY,
+        test_id INT PRIMARY KEY,
         title VARCHAR(255),
         date_created DATE,
-        admin_id INT FOREIGN KEY REFERENCES User_Info(user_id)
+        admin_id INT
 );
+
+SELECT cast(getdate() as date)
+
+INSERT INTO Test
+VALUES (0, '1st Test', cast(getdate() as date), 0) 
+
+SELECT MAX(test_id) FROM Test
+
+SELECT * FROM Test;
+
+SELECT MAX(test_id)
+FROM Test
 
 DROP TABLE Test_question;
 
 CREATE TABLE Test_question(
 		question_id VARCHAR(50) FOREIGN KEY REFERENCES Question(question_id),
-		test_id VARCHAR(50) FOREIGN KEY REFERENCES Test(test_id)
+		test_id INT FOREIGN KEY REFERENCES Test(test_id)
 )
+
+SELECT * FROM Test;
+SELECT * FROM Test_question;
+
+DELETE FROM Test_question
+Where test_id = 3
+
+DELETE FROM Test
+Where test_id = 3
