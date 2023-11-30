@@ -68,6 +68,9 @@ CREATE TABLE Test (
         admin_id INT
 );
 
+ALTER TABLE Test 
+ADD Image VarChar(255);
+
 SELECT cast(getdate() as date)
 
 INSERT INTO Test
