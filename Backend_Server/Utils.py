@@ -23,13 +23,6 @@ Encrypt=no;
 conn = pdb.connect(connectionString)
 
 def insert_new_exam(title, question_exam):
-    check_query = """
-    SELECT MAX(test_id) FROM Test
-    """
-    cursor = conn.cursor()
-    cursor.execute(check_query)
-    fetch = cursor.fetchone()
-    max_id = fetch[0] + 1
     insert_query = f"""
     INSERT INTO Test (title, date_created, admin_id)
     VALUES (?, ?, ?)
@@ -37,6 +30,14 @@ def insert_new_exam(title, question_exam):
     cursor = conn.cursor()
     cursor.execute(insert_query, title, date.today(), 0)
     conn.commit()
+    # Get max id
+    check_query = """
+    SELECT MAX(test_id) FROM Test
+    """
+    cursor = conn.cursor()
+    cursor.execute(check_query)
+    fetch = cursor.fetchone()
+    max_id = fetch[0]
     for q in question_exam:
         query = """
         INSERT INTO Test_question
@@ -64,6 +65,13 @@ def generate_random_Exam(title, subject = '%', question_number = 10):
 
 # Test
 if __name__ == '__main__':
-    generate_random_Exam(title='sample_exam01', subject='Medicine')
-    generate_random_Exam(title='sample_exam02', question_number=20)
-    generate_random_Exam(title='sample_exam03', question_number=15)
+    #Get user input
+    while True:
+        title = input('Enter title: ')
+        question_number = int(input('Enter number of questions: '))
+        generate_random_Exam(title, question_number = question_number)
+        # Continue?
+        print('Do you want to continue? (y/n)')
+        choice = input()
+        if choice == 'n':
+            break

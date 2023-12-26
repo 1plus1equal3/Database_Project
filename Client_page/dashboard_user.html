@@ -29,6 +29,16 @@
     </style>
 
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="dashboard_user.js"></script>
+    <script>
+        // Example: Retrieve and check if user_id is saved correctly
+        function checkUserId() {
+            var storedUserId = localStorage.getItem('user_id');
+            console.log(storedUserId);
+        }
+        window.onload = checkUserId;
+        window.onload = loadQuestion;
+    </script>
 
 </head>
 
@@ -358,7 +368,7 @@
                     <div class="row">
 
                         <!-- Border Left Utilities -->
-                        <div class="col-lg-4">
+                        <div class="col-lg-4" id="column_1">
 
                             <div class="card mb-4 py-3 border-left-primary">
                                 <div class="card-body">
@@ -404,54 +414,7 @@
 
                         </div>
 
-                        <!-- Border Bottom Utilities -->
-                        <!-- <div class="col-lg-6">
-
-                            <div class="card mb-4 py-3 border-bottom-primary">
-                                <div class="card-body">
-                                    .border-bottom-primary
-                                </div>
-                            </div>
-
-                            <div class="card mb-4 py-3 border-bottom-secondary">
-                                <div class="card-body">
-                                    .border-bottom-secondary
-                                </div>
-                            </div>
-
-                            <div class="card mb-4 py-3 border-bottom-success">
-                                <div class="card-body">
-                                    .border-bottom-success
-                                </div>
-                            </div>
-
-                            <div class="card mb-4 py-3 border-bottom-info">
-                                <div class="card-body">
-                                    .border-bottom-info
-                                </div>
-                            </div>
-
-                            <div class="card mb-4 py-3 border-bottom-warning">
-                                <div class="card-body">
-                                    .border-bottom-warning
-                                </div>
-                            </div>
-
-                            <div class="card mb-4 py-3 border-bottom-danger">
-                                <div class="card-body">
-                                    .border-bottom-danger
-                                </div>
-                            </div>
-
-                            <div class="card mb-4 py-3 border-bottom-dark">
-                                <div class="card-body">
-                                    .border-bottom-dark
-                                </div>
-                            </div>
-
-                        </div> -->
-
-                        <div class="col-lg-4">
+                        <div class="col-lg-4" id="column_2">
 
                             <div class="card mb-4 py-3 border-left-primary">
                                 <div class="card-body">
@@ -497,7 +460,7 @@
 
                         </div>
 
-                        <div class="col-lg-4">
+                        <div class="col-lg-4" id="column_3">
 
                             <div class="card mb-4 py-3 border-left-primary">
                                 <div class="card-body">
@@ -601,6 +564,8 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+    <script src="dashboard_user.js"></script>
 
 </body>
 

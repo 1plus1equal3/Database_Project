@@ -28,36 +28,27 @@ conn = pdb.connect(connectionString)
 def register_user(user):
     username = user.get('username')
     password = user.get('password')
-    user_id = user.get('user_id')
     email = user.get('email')
-    user_type = user.get('user_type')
 
     # User_id validation
     select_query = f"""
-    SELECT * FROM User_info
-    WHERE User_info.user_id = {user_id}
-    OR User_info.username = '{username}';
+    DECLARE @result INT;
+    EXEC @result = func_register '{username}', '{password}', '{email}';
+    SELECT @result;
     """
     cursor = conn.cursor()
     cursor.execute(select_query)
-    records = cursor.fetchall()
-    msg = jsonify({'success': False})
-    if len(records) > 0:
-        msg = jsonify({'success': False})
-    else:
-        # Insert user info into User_info table
-        insert_query = f"""
-        INSERT INTO User_info VALUES ({user_id}, '{username}', '{password}', '{email}', {user_type})
-        """
-        cursor.execute(insert_query)
-        conn.commit()
+    records = cursor.fetchone()
+    if records[0] == 1:
         msg = jsonify({'success': True})
+    elif records[0] == 0:
+        msg = jsonify({'success': False, 'error': 'Username already exists'})
     return msg
 
 def login_user(user):
     username = user.get('username')
     password = user.get('password')
-    query = 'SELECT * FROM User_info WHERE username = ? AND user_password = ?'
+    query = 'SELECT dbo.func_login(?, ?)'
     cursor = conn.cursor()
     cursor.execute(query, username, password)
     user = cursor.fetchone()
@@ -74,6 +65,23 @@ def get_user_info(id):
     cursor.execute(query, id)
     user = cursor.fetchone()
     return jsonify(user)
+
+def requestExam():
+    query = 'SELECT * FROM dbo.request_exam();'
+    cursor = conn.cursor()
+    cursor.execute(query)
+    fetch_result = cursor.fetchall()
+    examList = []
+    base_url = 'http://localhost:5000/exam?test_id='
+    for i in fetch_result:
+        test_dict = {
+            'test_url': base_url + str(i[0]),
+            'title': i[1],
+            'date_created': i[2],
+        }
+        examList.append(test_dict)
+    return jsonify(examList)
+
 
 ### Server communication ###
 app = Flask(__name__)
@@ -97,6 +105,11 @@ def getUserInfo():
     info = get_user_info(data)
     return info
 
+@app.route('/request_exam', methods=['GET'])
+def request_exam():
+    examList = requestExam()
+    print(examList)
+    return examList
 
 # Start server
 if __name__ == '__main__':

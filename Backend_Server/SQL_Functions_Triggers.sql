@@ -16,7 +16,6 @@ GO;
 
 --Test function
 SELECT dbo.func_login('Nguyen Dang Duy', 'aothatday123');
-
 GO;
 
 
@@ -40,7 +39,31 @@ GO;
 
 --Test register
 DECLARE @result INT;
-EXEC @result = func_register 'tester', 'tester', 'tester@gmail.com';
+EXEC @result = func_register 'tester', 'tester', 'test_email';
 SELECT @result;
 
 SELECT * FROM User_info;
+GO;
+
+
+-- User function
+ 
+-- Load dashboard with random exam
+
+SELECT TOP 10 * FROM Test
+ORDER BY NEWID();
+GO;
+
+CREATE VIEW request_exam_list
+AS SELECT TOP 10 * FROM Test
+ORDER BY NEWID();
+GO;
+
+CREATE FUNCTION request_exam()
+RETURNS TABLE
+AS
+RETURN SELECT * FROM request_exam_list;
+GO;
+
+--Test request_exam
+SELECT * FROM dbo.request_exam();

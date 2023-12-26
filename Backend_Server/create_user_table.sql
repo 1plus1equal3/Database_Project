@@ -63,12 +63,16 @@ DROP TABLE Test;
 
 CREATE TABLE Test (
         test_id INT IDENTITY(1,1) PRIMARY KEY,
-        title VARCHAR(255),
+        title VARCHAR(255) NOT NULL,
         date_created DATE,
         admin_id INT
 );
 
+ALTER TABLE Test 
+ALTER COLUMN title VARCHAR(255) NOT NULL;
+
 SELECT * FROM Test;
+DELETE FROM Test WHERE test_id = 6;
 
 Insert into Test (title, date_created, admin_id)
 values ('test_0', cast(getdate() as date), 0);

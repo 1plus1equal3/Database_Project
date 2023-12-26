@@ -2,13 +2,13 @@ function submitForm() {
     // Get form values
     var username = document.getElementById("exampleFirstName").value;
     var email = document.getElementById("exampleInputEmail").value;
-    var userId = document.getElementById("exampleUserID").value;
+    //var userId = document.getElementById("exampleUserID").value;
     var password = document.getElementById("exampleInputPassword").value;
     var repeatPassword = document.getElementById("exampleRepeatPassword").value;
 
     if((username == null || username == "")
     &&(email == null || email == "")
-    &&(userId == null || userId == "")
+    //&&(userId == null || userId == "")
     &&(password == null || password == "")
     &&(repeatPassword == null || repeatPassword == "")){
         alert('Please enter all register information');
@@ -26,7 +26,7 @@ function submitForm() {
     var userObject = {
         username: username,
         email: email,
-        user_id: userId,
+        //user_id: userId,
         password: password,
         user_type: 0
     };
