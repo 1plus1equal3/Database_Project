@@ -43,7 +43,7 @@ def show_detail(test):
     query = """
             SELECT *
             FROM Test
-            WHERE title = ?
+            WHERE test_id = ?
             """
     cursor.execute(query, test)
     exam = cursor.fetchall()
