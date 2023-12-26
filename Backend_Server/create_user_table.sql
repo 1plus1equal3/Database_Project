@@ -1,27 +1,25 @@
 --User Table
+DROP TABLE User_info;
+GO;
 CREATE TABLE User_info(
-	user_id int PRIMARY KEY, -- Student ID/Teacher ID
+	user_id int PRIMARY KEY IDENTITY(1, 1), -- Student ID/Teacher ID
 	username nvarchar(255) NOT NULL,
 	user_password nvarchar(255) NOT NULL, -- > 8 character
 	email nvarchar(255) NOT NULL, -- check validation
 	user_type int NOT NULL-- admin(1) or participant(0)
 );
 
-INSERT INTO User_info
+INSERT INTO User_info(username, user_password, email, user_type)
 VALUES 
-(20210272, 'Nguyen Dang Duy', 'aothatday123', 'dontunderstandyou12345@gmail.com', 1),
-(20215254, 'Bui Duc Viet', 'vietdepzai123', 'viet.bd215254@sis.hust.edu.vn', 1),
-(20215182, 'Tran Thuy Chau', 'chauxinggai123', 'chau.tt215182@sis.hust.edu.vn', 1),
-(20215207, 'Pham Quang Huy', 'huydepzai123', 'huy.pq215207@sis.hust.edu.vn', 1);
+('Nguyen Dang Duy', 'aothatday123', 'dontunderstandyou12345@gmail.com', 1),
+('Bui Duc Viet', 'vietdepzai123', 'viet.bd215254@sis.hust.edu.vn', 1),
+('Tran Thuy Chau', 'chauxinggai123', 'chau.tt215182@sis.hust.edu.vn', 1),
+('Pham Quang Huy', 'huydepzai123', 'huy.pq215207@sis.hust.edu.vn', 1);
 
-insert into User_info Values (0, 'admin', 'admin', 'admin@gmail.com', 1);
+insert into User_info(username, user_password, email, user_type) 
+Values ('admin', 'admin', 'admin@gmail.com', 1);
 
 SELECT * FROM User_info;
-
-SELECT * FROM User_info
-WHERE User_info.user_id = 20210272
-OR User_info.username = 'khabanh';
-
 
 --Question table
 DROP TABLE Question;
