@@ -65,5 +65,13 @@ AS
 RETURN SELECT * FROM request_exam_list;
 GO;
 
+--Error
+CREATE FUNCTION request_exam_1()
+RETURNS TABLE
+AS
+RETURN (SELECT TOP 10 * FROM Test
+ORDER BY NEWID());
+GO;
+
 --Test request_exam
 SELECT * FROM dbo.request_exam();

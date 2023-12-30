@@ -1,6 +1,6 @@
 import pandas as pd
 import pyodbc as pdb
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 ### Connect to SQL Server database ###
@@ -52,9 +52,8 @@ def login_user(user):
     cursor = conn.cursor()
     cursor.execute(query, username, password)
     user = cursor.fetchone()
-
-    if user:
-        user_id = user[0]
+    user_id = user[0]
+    if user_id != -1:
         return jsonify({'success': True, 'user_id': user_id})
     else:
         return jsonify({'success': False, 'error': 'Invalid username or password'})
@@ -84,8 +83,15 @@ def requestExam():
 
 
 ### Server communication ###
-app = Flask(__name__)
+app = Flask(__name__, 
+            static_url_path='/static',
+            static_folder='static',
+            template_folder='templates')
 CORS(app)
+
+@app.route('/')
+def home():
+    return render_template('login.html')
 
 @app.route('/register', methods=['POST'])
 def register():

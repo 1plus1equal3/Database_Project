@@ -27,7 +27,6 @@ function submitForm(event) {
               if (data.success) {
                   alert('Login successful');
                   user_id = data.user_id;
-
                   // Save user_id in localStorage
                   localStorage.setItem('user_id', user_id);
                   var newUrl = "dashboard_user.html";

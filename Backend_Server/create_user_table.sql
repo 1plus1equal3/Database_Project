@@ -86,3 +86,5 @@ CREATE TABLE Test_question(
 
 SELECT * FROM Test_question;
 
+BACKUP DATABASE Project
+TO DISK = 'C:\Users\D\Documents\GitHub\Database_Project\Backend_Server\backup_db';
