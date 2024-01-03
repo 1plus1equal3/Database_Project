@@ -1,8 +1,12 @@
 function createExamDiv(jsonData){
-    var container = document.getElementById("exam_container");
+    var container = document.getElementById("content");
 
   // Iterate over each JSON object and create card elements
   jsonData.forEach(function(item, index) {
+    // Create an embbeded link
+    var linkElement = document.createElement("a");
+    linkElement.href = "test_interface.html" + "?id=" + item.exam_id;
+    linkElement.style = "text-decoration: none; color: black;";
     // Create a new card element
     var cardElement = document.createElement("div");
     cardElement.className = "card mb-4 py-3 border-left-primary"; // You can customize the classes here
@@ -14,12 +18,12 @@ function createExamDiv(jsonData){
     cardBodyElement.innerHTML = `
       <strong>Title:</strong> ${item.title} <br>
       <strong>Date Created:</strong> ${item.date_created} <br>
-      <strong>Test URL:</strong> <a href="${item.test_url}" target="_blank">${item.test_url}</a>
     `;
 
+    // Append the card to the link
+    linkElement.appendChild(cardBodyElement);
     // Append the card body to the card
-    cardElement.appendChild(cardBodyElement);
-
+    cardElement.appendChild(linkElement);
     // Append the card to the container
     container.appendChild(cardElement);
   });

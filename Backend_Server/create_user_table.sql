@@ -32,7 +32,7 @@ CREATE TABLE Question (
         topic VARCHAR(255)
 );
 
-SELECT * FROM Question;
+SELECT * FROM Question WHERE question_content = 'Platelets transfusion must be completed in how many hours after entering the bag';
 
 DROP TABLE Question;
 
@@ -46,7 +46,7 @@ CREATE TABLE Answer (
         is_correct BIT NOT NULL
 );
 
-SELECT * FROM Answer;
+SELECT * FROM Answer where question_id = 'e38f2f41-bc94-4276-85c9-d4225212a141';
 
 --Explaination table
 DROP TABLE Explaination;

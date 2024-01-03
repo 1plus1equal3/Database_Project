@@ -23,14 +23,14 @@ function generateExamList(exams) {
 // use getExams() instead of generateExamList() in dashboard_user.html
 // when call API to fetch real data
 
-// function getExams(){
-//     fetch(<API>)
-//       .then(response => response.json())
-//       .then(data => {
-//             console.log(data);
-//             generateExamList(data);
-//       })
-// }
+function getExams(){
+    fetch("http://localhost:5000/request_exam")
+      .then(response => response.json())
+      .then(data => {
+            console.log(data);
+            generateExamList(data);
+      })
+}
 
 generateExamList([
     {

@@ -1,0 +1,53 @@
+/* Reset default styles */
+@font-face {
+    font-family: BeVietNamPro;
+    src: url(fonts/BeVietnamPro-Regular.ttf);
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family:  BeVietNamPro;
+    display: flex;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    height: 100%;
+}
+
+.content {
+    margin: 10px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+.box {
+    border: 1px solid;
+    width: max-content;
+    margin: 10px;
+    float: left;
+    border-radius: 5px;
+}
+
+
+#outer {
+    margin-right: 50px;
+    margin-left: 50px;
+    height: 100%;
+}
+/* Progress box (sidebar) styling */
+#outer {
+    width: 300px; /* Set the width of the progress box as needed */
+    /* Additional styles for the progress box */
+}
+
+/* Questions box (content) styling */
+.choice {
+    flex: 1;
+    margin-bottom: 50px;
+    /* Additional styles for the questions box */
+}

@@ -75,3 +75,32 @@ GO;
 
 --Test request_exam
 SELECT * FROM dbo.request_exam();
+GO;
+
+CREATE PROCEDURE GetTestQuestions
+(@TestID INT)
+AS
+BEGIN
+    SELECT Q.question_id, Q.question_content
+    FROM Test_question T, Question Q 
+    WHERE test_id = @TestID
+    AND Q.question_id = T.question_id;
+END;
+GO;
+
+-- Test get questions
+EXEC GetTestQuestions @TestID = 7;
+GO;
+
+CREATE PROCEDURE GetAnswerText
+(@question_ID VARCHAR(50))
+AS
+BEGIN
+    SELECT answer_content
+    FROM Answer
+    WHERE question_id = @question_ID
+END;
+GO;
+
+EXEC GetAnswerText @question_ID = "ed2a9e8e-66a7-4090-84f1-21d823db1ade";
+GO;

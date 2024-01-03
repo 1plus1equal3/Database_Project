@@ -71,27 +71,39 @@ def requestExam():
     cursor.execute(query)
     fetch_result = cursor.fetchall()
     examList = []
-    base_url = 'http://localhost:5000/exam?test_id='
+    # base_url = 'http://localhost:5000/exam?exam_id='
     for i in fetch_result:
         test_dict = {
-            'test_url': base_url + str(i[0]),
+            'exam_id': i[0],
             'title': i[1],
             'date_created': i[2],
         }
         examList.append(test_dict)
     return jsonify(examList)
 
+def show_test(exam_id):
+    cursor = conn.cursor()
+    query = "EXEC GetTestQuestions @TestID = ?"
+    cursor.execute(query, exam_id)
+    questions = cursor.fetchall()
+    #return questions
+    list_ques = []
+    for i in range(len(questions)):
+        # print(questions[i][0])
+        query_opt = f"EXEC GetAnswerText @question_ID = '{questions[i][0]}';"
+        cursor.execute(query_opt)
+        options = cursor.fetchall()
+        list_ques.append({'question': questions[i][1], 'opt_a': options[0][0], 'opt_b': options[1][0], 'opt_c': options[2][0], 'opt_d': options[3][0]})
+    return jsonify(list_ques)
+
 
 ### Server communication ###
-app = Flask(__name__, 
-            static_url_path='/static',
-            static_folder='static',
-            template_folder='templates')
+app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
-def home():
-    return render_template('login.html')
+# @app.route('/')
+# def home():
+#     return render_template('login.html')
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -116,6 +128,12 @@ def request_exam():
     examList = requestExam()
     print(examList)
     return examList
+
+@app.route('/exam', methods=['GET'])
+def exam():
+    exam_id = request.args.get('exam_id')
+    questionList = show_test(exam_id)
+    return questionList
 
 # Start server
 if __name__ == '__main__':

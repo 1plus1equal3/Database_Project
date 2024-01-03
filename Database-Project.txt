@@ -1,6 +1,6 @@
 Database Project
 - Thiết kế Database cho user (người dự thi, người tạo bài kiểm tra)
-1. Người thi:
+1. User:
 + Log in:
  . Database lưu tên user, password, số bài dự thi đã tham gia, id các bài dự thi,...
  . Quản lí log in (so sánh password, tên user,...) (Back_end)
