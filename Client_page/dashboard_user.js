@@ -7,6 +7,12 @@ function createExamDiv(jsonData){
     var linkElement = document.createElement("a");
     linkElement.href = "test_interface.html" + "?id=" + item.exam_id;
     linkElement.style = "text-decoration: none; color: black;";
+    // Create an image representation
+    var image = document.createElement("img");
+    image.src = "course.png";
+    image.width = "100";
+    image.height = "100";
+
     // Create a new card element
     var cardElement = document.createElement("div");
     cardElement.className = "card mb-4 py-3 border-left-primary"; // You can customize the classes here
@@ -21,6 +27,7 @@ function createExamDiv(jsonData){
     `;
 
     // Append the card to the link
+    linkElement.appendChild(image);
     linkElement.appendChild(cardBodyElement);
     // Append the card body to the card
     cardElement.appendChild(linkElement);
