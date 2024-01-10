@@ -1,4 +1,4 @@
-function generateExamList(exams) {
+function generateHistoryList(exams) {
     var mainContent = document.getElementById("content");
 
     exams.forEach((exam) => {
@@ -10,9 +10,9 @@ function generateExamList(exams) {
         // Customize cardBody content
         cardBody.className = "card-body";
         cardBody.innerHTML = `
-            <h5 class="card-title">${exam.name}</h5>
-            <p class="card-text">Question: ${exam.question}</p>
-            <p class="card-text">Answer: ${exam.answer}</p>
+            <h5 class="card-title">${exam.title}</h5>
+            <p class="card-text">Score: ${exam.score}</p>
+            <p class="card-text">Date: ${exam.date}</p>
         `;
 
         card.appendChild(cardBody);
@@ -23,44 +23,45 @@ function generateExamList(exams) {
 // use getExams() instead of generateExamList() in dashboard_user.html
 // when call API to fetch real data
 
-function getExams(){
-    fetch("http://localhost:5000/request_exam")
+function getUserHistory(){
+    user_id = localStorage.getItem("user_id");
+    fetch("http://localhost:5000/history?user_id=" + user_id)
       .then(response => response.json())
       .then(data => {
             console.log(data);
-            generateExamList(data);
+            generateHistoryList(data);
       })
 }
 
-generateExamList([
-    {
-        name: "name1",
-        question: "question1",
-        answer: "answer1",
-    },
-    {
-        name: "name2",
-        question: "question2",
-        answer: "answer2",
-    },
-    {
-        name: "name2",
-        question: "question2",
-        answer: "answer2",
-    },
-    {
-        name: "name2",
-        question: "question2",
-        answer: "answer2",
-    },
-    {
-        name: "name2",
-        question: "question2",
-        answer: "answer2",
-    },
-    {
-        name: "name2",
-        question: "question2",
-        answer: "answer2",
-    },
-]);
+// generateExamList([
+//     {
+//         name: "name1",
+//         question: "question1",
+//         answer: "answer1",
+//     },
+//     {
+//         name: "name2",
+//         question: "question2",
+//         answer: "answer2",
+//     },
+//     {
+//         name: "name2",
+//         question: "question2",
+//         answer: "answer2",
+//     },
+//     {
+//         name: "name2",
+//         question: "question2",
+//         answer: "answer2",
+//     },
+//     {
+//         name: "name2",
+//         question: "question2",
+//         answer: "answer2",
+//     },
+//     {
+//         name: "name2",
+//         question: "question2",
+//         answer: "answer2",
+//     },
+// ]);

@@ -104,3 +104,50 @@ GO;
 
 EXEC GetAnswerText @question_ID = "ed2a9e8e-66a7-4090-84f1-21d823db1ade";
 GO;
+
+CREATE FUNCTION getCorrectAns
+(@question_id VARCHAR(50))
+RETURNS CHAR
+AS
+BEGIN
+DECLARE @opt CHAR
+SELECT @opt=ans
+FROM Question
+WHERE question_id = @question_id
+RETURN @opt
+END
+GO;
+
+--Test getCorrectAns
+SELECT dbo.getCorrectAns('ed2a9e8e-66a7-4090-84f1-21d823db1ade');
+GO;
+
+-- Insert History function
+CREATE PROC insertHistory
+(@user_id INT, @test_id INT, @score FLOAT)
+AS
+BEGIN
+	INSERT INTO History(user_id, test_id, score)
+	VALUES (@user_id, @test_id, @score);
+END
+GO;
+
+-- Test insert History
+EXEC insertHistory @user_id = 5, @test_id = 10, @score = 8.8;
+SELECT * FROM History;
+GO;
+
+-- Get user history
+CREATE FUNCTION request_user_history
+(@user_id INT)
+RETURNS TABLE
+AS
+RETURN 
+(SELECT h.*, t.title, t.admin_id FROM History h
+JOIN Test t ON h.test_id = t.test_id
+WHERE h.user_id = @user_id);
+GO;
+
+--Test request_user_history
+SELECT * FROM dbo.request_user_history(6);
+GO;
