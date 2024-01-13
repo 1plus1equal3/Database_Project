@@ -31,6 +31,8 @@ function getUserHistory(){
             console.log(data);
             generateHistoryList(data);
       })
+    var username = localStorage.getItem("username");
+    document.getElementById("username").textContent = username;
 }
 
 // generateExamList([

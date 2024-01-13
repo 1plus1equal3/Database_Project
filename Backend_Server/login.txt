@@ -1,0 +1,8 @@
+username    password
+
+duy         vandangfixbug123
+viet        fixmaikoxong456
+chau        fixxonglaibug789
+huy         bugxonglaifix123
+tester      tester
+admin       admin

@@ -9,6 +9,8 @@ CREATE TABLE User_info(
 	user_type int NOT NULL-- admin(1) or participant(0)
 );
 
+select -1;
+
 INSERT INTO User_info(username, user_password, email, user_type)
 VALUES 
 ('Nguyen Dang Duy', 'aothatday123', 'dontunderstandyou12345@gmail.com', 1),
@@ -16,10 +18,16 @@ VALUES
 ('Tran Thuy Chau', 'chauxinggai123', 'chau.tt215182@sis.hust.edu.vn', 1),
 ('Pham Quang Huy', 'huydepzai123', 'huy.pq215207@sis.hust.edu.vn', 1);
 
-insert into User_info(username, user_password, email, user_type) 
-Values ('admin', 'admin', 'admin@gmail.com', 1);
+TRUNCATE TABLE User_info;
 
 SELECT * FROM User_info;
+
+UPDATE User_info
+SET user_type = 1
+WHERE user_id BETWEEN 0 AND 13;
+
+DELETE FROM User_info
+WHERE username = 'test';
 
 --Question table
 DROP TABLE Question;
@@ -83,6 +91,9 @@ ALTER TABLE Test
 ALTER COLUMN title VARCHAR(255) NOT NULL;
 
 SELECT * FROM Test;
+UPDATE Test
+SET admin_id = 5
+WHERE test_id between 21 and 30;
 DELETE FROM Test WHERE test_id = 6;
 
 Insert into Test (title, date_created, admin_id)
@@ -100,12 +111,16 @@ SELECT * FROM Test_question;
 BACKUP DATABASE Project
 TO DISK = 'C:\Users\D\Documents\GitHub\Database_Project\Backend_Server\backup_db';
 
+DROP TABLE History;
+
 CREATE TABLE History(
 		user_id INT NOT NULL FOREIGN KEY REFERENCES User_info(user_id),
 		test_id INT NOT NULL FOREIGN KEY REFERENCES Test(test_id),
 		score FLOAT NOT NULL,
 		finish_time DATE NOT NULL DEFAULT GETDATE()
 );
+
+TRUNCATE TABLE History;
 
 -- Test insert history
 Insert into History(user_id, test_id, score) Values(1, 10, 10);

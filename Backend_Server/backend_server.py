@@ -25,45 +25,66 @@ conn = pdb.connect(connectionString)
 
 ### Utility functions ###
 # Username, password & email validation must be done in frontend!
+
+def hash(password):
+    hashed_password = ""
+    for char in password:
+        temp = int((17 * ord(char) / 11) + 2003)
+        hashed_password += chr(temp % 87 + 40)
+    return hashed_password
+
 def register_user(user):
     username = user.get('username')
-    password = user.get('password')
+    password = hash(user.get('password'))
     email = user.get('email')
 
-    # User_id validation
-    select_query = f"""
-    DECLARE @result INT;
-    EXEC @result = func_register '{username}', '{password}', '{email}';
-    SELECT @result;
-    """
+    # User validation
+    select_query = f"""select dbo.checkUser('{username}');"""
     cursor = conn.cursor()
     cursor.execute(select_query)
-    conn.commit()
     records = cursor.fetchone()
-    if records[0] == 1:
-        msg = jsonify({'success': True})
-    elif records[0] == 0:
+    msg = ''
+    if records[0] == -1:
         msg = jsonify({'success': False, 'error': 'Username already exists'})
+        return msg
+    msg = jsonify({'success': True})
+    select_query = f"""EXEC func_register '{username}', '{password}', '{email}';"""
+    cursor = conn.cursor()
+    cursor.execute(select_query)
     return msg
+    
 
 def login_user(user):
     username = user.get('username')
-    password = user.get('password')
+    password = hash(user.get('password'))
     cursor = conn.cursor()
     query = 'SELECT dbo.func_login(?, ?)'
     cursor.execute(query, username, password)
     user = cursor.fetchone()
     user_id = user[0]
-    if user_id != -1:
-        return jsonify({'success': True, 'user_id': user_id})
-    else:
+    if user_id == -1:
         return jsonify({'success': False, 'error': 'Invalid username or password'})
+    query = 'SELECT dbo.checkUserRole(?)'
+    cursor.execute(query, user_id)
+    user_type = cursor.fetchone()[0]
+    return jsonify({'success': True, 'user_id': user_id, 'username': username, 'user_type': user_type})
+        
 
 def get_user_info(id):
-    query = 'SELECT * FROM User_info WHERE user_id = ?'
+    query = 'EXEC getUserInfo @user_id = ?;'
     cursor = conn.cursor() 
     cursor.execute(query, id)
     user = cursor.fetchone()
+    user_id = user[0]
+    username = user[1]
+    email = user[3]
+    user_type = user[4]
+    user = {
+        'user_id': user_id,
+        'username': username,
+        'email': email,
+        'user_type': user_type
+    }
     return jsonify(user)
 
 def requestExam():
@@ -136,6 +157,25 @@ def show_history(user_id):
         list_history.append({'test_id': history[i][1], 'title': history[i][4], 'score': history[i][2], 'date': history[i][3]})
     return jsonify(list_history)
 
+def search_test(search_request):
+    print(search_request)
+    type = search_request['option']
+    cursor = conn.cursor()
+    query_id = "EXEC SearchTestID @TestID = ?"
+    query_title = "EXEC SearchTestTitle @title = ?"
+    if type == 1: #search by id
+        cursor.execute(query_id, int(search_request['search']))
+        info = cursor.fetchall()
+        test = {'Title': info[0][1], 'Admin': info[0][3], 'Date': info[0][2]}
+        return jsonify(test)
+    else:
+        cursor.execute(query_title, search_request['search'])
+        info = cursor.fetchall()
+        list_test = []
+        for i in range(len(info)):
+            list_test.append({'Title': info[i][1], 'Admin': info[i][3], 'Date': info[i][2]})
+        return jsonify(list_test)
+
 ### Server communication ###
 app = Flask(__name__)
 CORS(app)
@@ -158,8 +198,8 @@ def login():
 
 @app.route('/getUserInfo', methods=['GET'])
 def getUserInfo():
-    data = request.get_json()
-    info = get_user_info(data)
+    user_id = request.args.get('user_id')
+    info = get_user_info(user_id)
     return info
 
 @app.route('/request_exam', methods=['GET'])
@@ -185,6 +225,18 @@ def history():
     user_id = request.args.get('user_id')
     history = show_history(user_id)
     return history
+
+@app.route('/search', methods=['POST'])
+def search():
+    search_request = request.get_json()
+    result = search_test(search_request)
+    return result
+
+@app.route('/create_test', methods=['POST'])
+def create_test():
+    data = request.get_json()
+    print(data)
+    return jsonify({'success': True})
 
 # Start server
 if __name__ == '__main__':

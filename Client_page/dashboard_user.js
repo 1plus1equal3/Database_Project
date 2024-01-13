@@ -55,4 +55,6 @@ function loadQuestion(){
             console.log(data);
             createExamDiv(data);
       })
+      var username = localStorage.getItem("username");
+      document.getElementById("username").textContent = username;
 }

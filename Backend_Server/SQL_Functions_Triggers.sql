@@ -18,8 +18,23 @@ GO;
 SELECT dbo.func_login('Nguyen Dang Duy', 'aothatday123');
 GO;
 
+-- Check privilege
+CREATE FUNCTION checkUserRole
+(@user_id INT)
+RETURNS INT
+AS
+BEGIN
+DECLARE @u_role INT;
+SELECT @u_role = user_type FROM User_info WHERE user_id = @user_id;
+RETURN @u_role
+END
+GO;
+
+--Test check role
+select dbo.checkUserRole(1);
 
 
+drop proc func_register;
 
 --Sign up store_procedure
 CREATE PROC func_register 
@@ -29,24 +44,55 @@ BEGIN
 DECLARE @name INT;
 SELECT @name = COUNT(username) FROM User_info WHERE username = @u_name;
 IF @name <> 0 --If not return -1
-RETURN -1;
+RETURN -1
 --Else insert and return 0
 INSERT INTO User_info(username, user_password, email, user_type)
 VALUES (@u_name, @u_pass, @email, 0);
-RETURN 1;
+COMMIT
+RETURN 1
 END;
 GO;
 
 --Test register
 DECLARE @result INT;
-EXEC @result = func_register 'tester', 'tester', 'test_email';
+EXEC @result = func_register 'test', 'test', 'test@gmail.com';
 SELECT @result;
 
 SELECT * FROM User_info;
 GO;
 
+--Check user validation
+CREATE FUNCTION checkUser
+(@u_name NVARCHAR(255))
+RETURNS INT
+AS
+BEGIN
+DECLARE @name INT;
+SELECT @name = COUNT(username) FROM User_info WHERE username = @u_name;
+IF @name <> 0 --If not return -1
+RETURN -1
+--else return 1
+RETURN 1
+END;
+GO;
+
+select dbo.checkUser('tester');
 
 -- User function
+
+
+-- Load user_info
+CREATE PROC getUserInfo
+(@user_id INT)
+AS
+BEGIN
+	SELECT * FROM User_info WHERE user_id = @user_id;
+END
+GO;
+
+-- Test get user info
+EXEC getUserInfo @user_id = 6;
+GO;
  
 -- Load dashboard with random exam
 
@@ -151,3 +197,30 @@ GO;
 --Test request_user_history
 SELECT * FROM dbo.request_user_history(6);
 GO;
+
+-- Search Test by title
+CREATE PROCEDURE SearchTestTitle
+	@title varchar(255)
+AS
+BEGIN
+	SELECT test_id, title, date_created, username FROM Test, User_info 
+	WHERE title LIKE '%'+@title+'%' AND Test.admin_id = User_info.user_id
+END;
+GO;
+
+--Test search by title
+EXEC SearchTestTitle 'test';
+GO;
+
+-- Search Test by Id
+CREATE PROCEDURE SearchTestID
+	@TestID INT
+AS
+BEGIN
+	SELECT test_id, title, date_created, username FROM Test, User_info 
+	WHERE test_id = @TestID AND admin_id = user_id
+END;
+GO
+
+--Test search by Id
+EXEC SearchTestID 10;

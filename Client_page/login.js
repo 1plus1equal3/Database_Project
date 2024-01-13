@@ -27,9 +27,15 @@ function submitForm(event) {
               if (data.success) {
                   alert('Login successful');
                   user_id = data.user_id;
+                  username = data.username;
                   // Save user_id in localStorage
                   localStorage.setItem('user_id', user_id);
-                  var newUrl = "dashboard_user.html";
+                  localStorage.setItem('username', username);
+                  var newUrl;
+                  if(data.user_type == 0)
+                    newUrl = "dashboard_user.html";
+                  else 
+                    newUrl = "dashboard_admin.html";
                   window.location = newUrl;
               } else {
                   alert('Login failed');

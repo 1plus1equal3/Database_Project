@@ -15,6 +15,9 @@
     .account-settings-header-subtitle {
         margin-bottom: 40px; /* Adjust the value as needed */
     }
+    table {
+        border-spacing: 10px;
+    }
     </style>
 
     <title>SB Admin 2 - Border Utilities</title>
@@ -37,6 +40,7 @@
     </style>
 
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="profile.js"></script>
 
 </head>
 
@@ -67,7 +71,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="history.html">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>My Tests</span>
                 </a>
@@ -102,9 +106,9 @@
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="dashboard_user_search.html">
                     <i class="fas fa-fw fa-wrench"></i>
-                    <span>Take Tests</span>
+                    <span>Search Tests</span>
                 </a>
             </li>
 
@@ -144,9 +148,6 @@
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
-            <!-- Main Content -->
-            <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -154,7 +155,7 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
+    
                     <!-- Topbar Search -->
                     <!-- <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -168,10 +169,10 @@
                             </div>
                         </div>
                     </form> -->
-
+    
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
+    
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
@@ -195,7 +196,7 @@
                                 </form>
                             </div>
                         </li>
-
+    
                         <!-- Nav Item - Alerts -->
                         <!-- <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
@@ -246,7 +247,7 @@
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                             </div>
                         </li> -->
-
+    
                         <!-- Nav Item - Messages -->
                         <!-- <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
@@ -312,22 +313,22 @@
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                         </li> -->
-
+    
                         <!-- <div class="topbar-divider d-none d-sm-block"></div> -->
-
+    
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <!-- get name of user -->
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Chau.TT215182</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username">Chau.TT215182</span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="profile.html">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -346,9 +347,9 @@
                                 </a>
                             </div>
                         </li>
-
+    
                     </ul>
-
+    
                 </nav>
                 <!-- End of Topbar -->
 
@@ -357,51 +358,10 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-1 text-gray-800">Basic Account Information</h1>
-                    
                     <p class="account-settings-header-subtitle">These settings include basic information about your account.</p>
 
-
-                    
-                        <table style="width:100%">
-                            <tr>
-                              <th>UserID</th>
-                            </tr>
-                            <tr>
-                              <td>20215182</td>
-                              <td>The UserID that identifies you on TestGen. You cannot change your UserID.</td>
-                            </tr>
-    
-                            <tr>
-                              <th>Username</th>
-                            </tr>
-                            <tr>
-                              <td>Tran Thuy Chau</td>
-                              <td>The name that is used for ID verification and that appears on your certificates.</td>
-                            </tr>
+                        <table id="user_info">
                             
-                            <tr>
-                                <th>Email</th>
-                            </tr>
-                            <tr>
-                                <td>tranthuychau@gmail.com</td>
-                                <td>You will receive messages from TestGen at this address</td>
-                            </tr>
-
-                            <tr>
-                                <th>Password</th>
-                            </tr>
-                            <tr>
-                                <td>moctran121003</td>
-                                
-                            </tr>
-
-                            <tr>
-                                <th>User Type</th>
-                            </tr>
-                            <tr>
-                                <td>Administrator</td>
-                                
-                            </tr>
                         </table>
 
                     
@@ -417,17 +377,14 @@
                 </div>
                 <!-- /.container-fluid -->
 
-            </div>
-            <!-- End of Main Content -->
-
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <!-- <footer class="sticky-footer bg-white">
                 <div class="container-fluid">
                     <div class="copyright text-center">
                         <span>Copyright &copy; TestGen2023</span>
                     </div>
                 </div>
-            </footer>
+            </footer> -->
             <!-- End of Footer -->
 
         </div>
