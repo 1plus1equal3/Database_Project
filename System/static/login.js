@@ -36,7 +36,7 @@ function submitForm(event) {
                     newUrl = "dashboard_user.html";
                   else 
                     newUrl = "dashboard_admin.html";
-                  window.location = newUrl;
+                  window.location = 'http://localhost:5000/' + newUrl;
               } else {
                   alert('Login failed');
               }

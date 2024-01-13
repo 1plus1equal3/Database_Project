@@ -43,7 +43,7 @@ function submitForm() {
             if (data.success) {
               alert('Register successful');
               // Redirect to the login page after successful registration
-              window.location.href = "login.html";
+              window.location.href = "http://localhost:5000/";
             } else {
               alert('Register failed');
             }

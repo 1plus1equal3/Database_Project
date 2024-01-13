@@ -22,7 +22,7 @@ function createExamDiv(jsonData) {
 
       // Create an image representation inside the card body
       var image = document.createElement("img");
-      image.src = "course.png";
+      image.src = "/static/course.png";
       image.width = "100";
       image.height = "100";
 
@@ -30,8 +30,8 @@ function createExamDiv(jsonData) {
       cardBodyElement.appendChild(image);
       cardBodyElement.innerHTML += `
           <div class="ml-3">
-              <strong>Title:</strong> ${item.title} <br>
-              <strong>Date Created:</strong> ${item.date_created} <br>
+              <strong>Title:</strong> ${item.Title} <br>
+              <strong>Date Created:</strong> ${item.Date} <br>
           </div>
       `;
 

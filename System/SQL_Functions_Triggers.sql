@@ -224,3 +224,72 @@ GO
 
 --Test search by Id
 EXEC SearchTestID 10;
+GO;
+
+-- Create random test
+SELECT TOP 10 * FROM Question
+WHERE subject LIKE 'Surgery'
+AND level = 3
+ORDER BY NEWID();
+GO;
+
+delete from Test_question where test_id = 26;
+delete from Test 
+where title = 'test';
+DECLARE @id INT;
+INSERT INTO Test (title, date_created, admin_id, subject, difficulty_level)
+VALUES ('test', GETDATE(), 1, NULL, NULL);
+SET @id = SCOPE_IDENTITY();
+SELECT @id;
+SELECT * FROM Test;
+
+INSERT INTO Test_question
+SELECT TOP 10 question_id, @id FROM Question
+WHERE subject LIKE 'Surgery'
+AND level = 3
+ORDER BY NEWID();
+
+SELECT * from Test_question where test_id = 27;
+GO;
+
+
+--Main procedure to create test
+DROP PROC createTest;
+GO;
+
+CREATE PROC createTest(
+@num_of_question INT, 
+@title VARCHAR(255), 
+@date DATE, 
+@admin_id INT, 
+@subject VARCHAR(30), 
+@level INT
+)
+AS
+BEGIN
+DECLARE @test_id INT;
+IF NOT EXISTS(SELECT title FROM Test WHERE title = @title)
+BEGIN
+	--Insert into Test
+	INSERT INTO Test (title, date_created, admin_id, subject, difficulty_level)
+	VALUES (@title, @date, @admin_id, @subject, @level);
+	SET @test_id = SCOPE_IDENTITY();
+	--Insert into Test_question
+	IF (@subject) = 'Unknown'
+	INSERT INTO Test_question
+	SELECT TOP (@num_of_question) question_id, @test_id FROM Question
+	WHERE level = @level ORDER BY NEWID();
+	ELSE
+	INSERT INTO Test_question
+	SELECT TOP (@num_of_question) question_id, @test_id FROM Question
+	WHERE subject = @subject AND level = @level ORDER BY NEWID();
+	--Return 1
+	SELECT @test_id;
+END
+ELSE
+SELECT 0;
+END;
+GO;
+
+--Test create Test
+EXEC createTest 10, 'test_1', '2023-01-12', 1, "Unknown", 1;

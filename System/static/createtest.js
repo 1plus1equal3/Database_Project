@@ -1,5 +1,5 @@
-// var username = localStorage.getItem("username");
-// document.getElementById("username").textContent = username;
+var username = localStorage.getItem("username");
+document.getElementById("username").textContent = username;
 
 function createTest(testInfo) {
     fetch('http://localhost:5000/create_test', {
@@ -11,8 +11,13 @@ function createTest(testInfo) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
-        alert('Test Created Successfully!');
+        if (data.success) {
+            alert(data.message);
+            // Redirect to the test page
+            window.location.href = "http://localhost:5000/test_view.html?id=" + data.test_id;
+        }else{
+            alert(data.message);
+        }
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -21,6 +26,7 @@ function createTest(testInfo) {
 
 function receiveTestInfo() {
     // Fetch values from the form
+    var title = document.getElementById('title').value;
     var numQuestions = document.getElementById('numQuestions').value;
     var subject = document.getElementById('subject').value;
     var difficulty = document.getElementById('difficulty').value;
@@ -34,12 +40,14 @@ function receiveTestInfo() {
     // Perform any additional logic or validation if needed
 
     // Log the values (you can replace this with your logic to create the test)
+    console.log('Title of the Test:', title);
     console.log('Number of Questions:', numQuestions);
     console.log('Subject of the Test:', subject);
     console.log('Difficulty Level:', difficulty);
     console.log('Admin ID:', admin_id);
 
     testInfo = {
+        title: title,
         numQuestions: numQuestions,
         subject: subject,
         difficulty: difficulty,

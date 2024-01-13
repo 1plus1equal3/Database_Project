@@ -54,3 +54,7 @@ body, html {
     margin-bottom: 50px;
     /* Additional styles for the questions box */
 }
+
+hr.new4 {
+    border: 1px solid #4e73df;
+  }

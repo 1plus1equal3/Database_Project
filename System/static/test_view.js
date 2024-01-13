@@ -12,66 +12,53 @@ function generateQuestionList(questions) {
     console.log(obj);
     questions.forEach((question, index) => {
         var card = document.createElement("div");
-        card.className = "question";
- 
+        card.className = "card shadow mb-4";
+
+        var title = document.createElement("div");
+        title.className = "card-header py-3";
+        title.innerHTML = `<h6 class = "m-0 font-weight-bold text-primary">Question ${index + 1}</h6>`;
+
         var body = document.createElement("div");
-        body.className = "choice";
-        body.innerHTML = `<p>${question.question}</p>`;
- 
-        //Create the choice for the questions
+        body.className = "card-body";
+        var ques = document.createElement("p");
+        ques.textContent = question.question;
         var choice1 = createChoice("first", "choice1", question.opt_a, index);
         var choice2 = createChoice("second", "choice2", question.opt_b, index);
         var choice3 = createChoice("third", "choice3", question.opt_c, index);
         var choice4 = createChoice("fourth", "choice4", question.opt_d, index);
- 
+
+        body.appendChild(ques);
         body.appendChild(choice1);
         body.appendChild(choice2);
         body.appendChild(choice3);
         body.appendChild(choice4);
- 
-        //Submit button for each question so as to save the selected choice
-        var butt = document.createElement("button");
-        butt.textContent = "Submit";
-        butt.addEventListener('click', function() {
-            var selectedOption = getSelectedOption(index);
-            // Check if question_id is already in selectedOptions
-            if (selectedOptions.some(e => e.question_id === question.question_id)) {
-                // Update answer
-                selectedOptions.forEach((option, index) => {
-                    if (option.question_id === question.question_id) {
-                        selectedOptions[index]['answer'] = selectedOption;
-                    }
-                });
-            } else {
-                selectedOptions.push({'answer': selectedOption, 'question_id': question.question_id}) // Store selected option in array
-            }
-            //finalAnswer = selectedOptions.map(jsonString => JSON.parse(jsonString));
-            if (selectedOptions[index] !== null) {
-                console.log("Question_id: " + question.question_id + " selected option: " + selectedOptions[index]['answer']);
-            } else {
-                console.log("No option selected for question " + index);
-            }
-            var box = document.getElementById(`box_${index+1}`);
-            box.style.backgroundColor = "grey";
-        });
-        //console.log(typeof(selectedOptions))
-        //console.log(typeof(JSON.stringify(selectedOptions)))
-        body.appendChild(butt);
+
+        var line = document.createElement("hr");
+        line.className="new4";
+
+        card.appendChild(title);
         card.appendChild(body);
         qbox.appendChild(card);
+        qbox.appendChild(line);
     });
  
  
  
     //Submit test button
     var finalSubmitButton = document.createElement("button");
-    finalSubmitButton.textContent = "Submit Test";
-   
+    finalSubmitButton.className = "btn btn-success btn-icon-split";
+    finalSubmitButton.textContent = "Back";
+   finalSubmitButton.innerHTML = `
+        <span class="icon text-white-50">
+            <i class="fas fa-check"></i>
+        </span>
+        <span class="text">Back</span>
+   `;
      finalSubmitButton.addEventListener('click', function() {
     //     //testAssessment();
            console.log(selectedOptions)
            console.log(user_id)
-           submitAnswer();
+           history.back();
     //     // Call testAsssessment on final test submission
      });
  
@@ -114,7 +101,7 @@ function getExamIdFromUrl(){
 function loadQuestion() {
     var id = getExamIdFromUrl();
     console.log(id);
-    var url = "http://localhost:5000/exam?exam_id=" + id;
+    var url = "http://localhost:5000/view_test?exam_id=" + id;
     fetch(url, {
         method: "GET",
         headers: {
@@ -131,7 +118,7 @@ function loadQuestion() {
  
  
 function submitAnswer(){
-    fetch('http://localhost:5000/test_interface', {
+    fetch('http://localhost:5000/submit_test', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -146,7 +133,7 @@ function submitAnswer(){
                   alert('Submit successfully');
                   console.log('Submit state: ' + data.submit_state);
                   console.log('Point: ' + data.score + '/' + num_of_questions);
-                  var newUrl = "dashboard_user.html";
+                  var newUrl = "http://localhost:5000/dashboard_user.html";
                   window.location = newUrl;
               } else {
                   alert('Submit fail');

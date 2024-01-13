@@ -1,3 +1,6 @@
+var username = localStorage.getItem("username");
+document.getElementById("username").textContent = username;
+
 function generateHistoryList(exams) {
     var mainContent = document.getElementById("content");
 
@@ -31,39 +34,4 @@ function getUserHistory(){
             console.log(data);
             generateHistoryList(data);
       })
-    var username = localStorage.getItem("username");
-    document.getElementById("username").textContent = username;
 }
-
-// generateExamList([
-//     {
-//         name: "name1",
-//         question: "question1",
-//         answer: "answer1",
-//     },
-//     {
-//         name: "name2",
-//         question: "question2",
-//         answer: "answer2",
-//     },
-//     {
-//         name: "name2",
-//         question: "question2",
-//         answer: "answer2",
-//     },
-//     {
-//         name: "name2",
-//         question: "question2",
-//         answer: "answer2",
-//     },
-//     {
-//         name: "name2",
-//         question: "question2",
-//         answer: "answer2",
-//     },
-//     {
-//         name: "name2",
-//         question: "question2",
-//         answer: "answer2",
-//     },
-// ]);

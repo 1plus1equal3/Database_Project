@@ -14,12 +14,12 @@ function createExamDiv(jsonData) {
 
       // Create an embedded link within the card
       var linkElement = document.createElement("a");
-      linkElement.href = "test_interface.html" + "?id=" + item.exam_id;
+      linkElement.href = "http://localhost:5000/test_interface.html" + "?id=" + item.exam_id;
       linkElement.style = "text-decoration: none; color: black;";
 
       // Create an image representation inside the card body
       var image = document.createElement("img");
-      image.src = "course.png";
+      image.src = "/static/course.png";
       image.width = "100";
       image.height = "100";
 
