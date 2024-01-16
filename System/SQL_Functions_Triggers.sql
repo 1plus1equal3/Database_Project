@@ -33,9 +33,6 @@ GO;
 --Test check role
 select dbo.checkUserRole(1);
 
-
-drop proc func_register;
-
 --Sign up store_procedure
 CREATE PROC func_register 
 (@u_name nvarchar(255), @u_pass nvarchar(255), @email nvarchar(255))
@@ -76,11 +73,12 @@ RETURN 1
 END;
 GO;
 
+--Test checkUser function
 select dbo.checkUser('tester');
 
--- User function
 
 
+-- @@@@ User function
 -- Load user_info
 CREATE PROC getUserInfo
 (@user_id INT)
@@ -95,7 +93,6 @@ EXEC getUserInfo @user_id = 6;
 GO;
  
 -- Load dashboard with random exam
-
 SELECT TOP 10 * FROM Test
 ORDER BY NEWID();
 GO;
@@ -138,6 +135,7 @@ GO;
 EXEC GetTestQuestions @TestID = 7;
 GO;
 
+-- Get question option procedure
 CREATE PROCEDURE GetAnswerText
 (@question_ID VARCHAR(50))
 AS
@@ -148,9 +146,11 @@ BEGIN
 END;
 GO;
 
+--Test GetAnswerText procedure
 EXEC GetAnswerText @question_ID = "ed2a9e8e-66a7-4090-84f1-21d823db1ade";
 GO;
 
+--Get correct answer function
 CREATE FUNCTION getCorrectAns
 (@question_id VARCHAR(50))
 RETURNS CHAR
