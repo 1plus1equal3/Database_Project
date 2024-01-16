@@ -2,7 +2,7 @@ var username = localStorage.getItem("username");
 document.getElementById("username").textContent = username;
 
 function createExamDiv(jsonData) {
-  var container = document.getElementById("searchContent");
+  var container = document.getElementById("content");
 
   // Iterate over each JSON object and create card elements
   jsonData.forEach(function (item, index) {

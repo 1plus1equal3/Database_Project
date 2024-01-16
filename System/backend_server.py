@@ -179,6 +179,29 @@ def search_test(search_request):
             list_test.append({'exam_id': info[i][0], 'Title': info[i][1], 'Admin': info[i][3], 'Date': info[i][2]})
         return jsonify(list_test)
     
+def search_question(search_request):
+    type = search_request['option']
+    cursor = conn.cursor()
+    query_subject = 'EXEC SearchQuesSubject @subject = ?'
+    query_content = 'EXEC SearchQuesContent @content = ?'
+    get_answer = 'EXEC GetAnswerText @question_id = ?'
+    list_question = []
+    if type == 1: #search by subject
+        cursor.execute(query_subject, search_request['search'])
+        info = cursor.fetchall()
+        for i in range(info):
+            cursor.execute(get_answer, info[i][0])
+            answer_list = cursor.fetchall()
+            list_question.append({'question': info[i][1], 'opt_a': answer_list[0][0], 'opt_b': answer_list[1][0], 'opt_c': answer_list[2][0], 'opt_d': answer_list[3][0]})
+    else:
+        cursor.execute(query_content, search_request['search'])
+        info = cursor.fetchall()
+        for i in range(info):
+            cursor.execute(get_answer, info[i][0])
+            answer_list = cursor.fetchall()
+            list_question.append({'question': info[i][1], 'opt_a': answer_list[0][0], 'opt_b': answer_list[1][0], 'opt_c': answer_list[2][0], 'opt_d': answer_list[3][0]})
+    return jsonify(list_question)
+    
 def create_test(test_info):
     title = test_info.get('title')
     question_number = test_info.get('numQuestions')
@@ -400,6 +423,12 @@ def view_test():
     exam_id = request.args.get('exam_id')
     questionList = show_test(exam_id)
     return questionList
+
+@app.route('/search_question', methods=['POST'])
+def search_question_api():
+    search_request = request.get_json()
+    result = search_question(search_request)
+    return result
 
 @app.route('/list_user', methods=['GET'])
 def getUserListAPI():

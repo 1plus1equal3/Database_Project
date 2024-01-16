@@ -313,3 +313,31 @@ SELECT COUNT (*) AS num_of_test, AVG(score) AS average_score, MAX(score)
 AS max_score, MIN(score) AS min_score
 FROM History WHERE user_id = @used_id
 );
+
+--Search question by subject
+CREATE PROCEDURE SearchQuesSubject
+	@subject varchar(255)
+AS
+BEGIN 
+SELECT question_id, question_content 
+FROM Question WHERE subject LIKE '%' + @subject + '%' 
+END;
+GO;
+
+--Test search question by subject
+exec SearchQuesSubject @subject = 'Medi';
+GO;
+
+--Search question by content
+CREATE PROCEDURE SearchQuesContent
+	@content varchar(255)
+AS
+BEGIN 
+SELECT question_id, question_content 
+FROM Question WHERE question_content LIKE '%' + @content + '%' 
+END;
+GO;
+
+--Test search Question by content
+exec SearchQuesContent @content = 'What';
+GO;
