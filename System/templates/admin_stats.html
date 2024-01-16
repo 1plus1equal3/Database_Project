@@ -3,7 +3,6 @@
 
 <head>
 
-    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,67 +17,15 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-        
 
     <!-- Custom styles for this template-->
     <style>
-        .container-fluid {
-            width: 100%;
-            margin: 0 auto;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .row {
-            width: 80%; /* Adjust the width value as needed for your layout */
-            padding-top: 20px;
-        }
         .h3.mb-1.text-gray-800 {
             margin-bottom: 20px; /* Adjust the margin-bottom value as needed */
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        form {
-        width: 100%;; /* Adjust the max-width value as needed for your layout */
-        margin: 20px auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        input, select {
-            margin-bottom: 15px;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            padding: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
+        .row {
+            padding-top: 20px; /* Adjust the padding-top value as needed */
         }
     </style>
 
@@ -119,9 +66,10 @@
                 </a>
             </li>
 
+
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item active">
-                <a class="nav-link" href="#">
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:5000/createtests_admin.html">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Create Tests</span>
                 </a>
@@ -129,7 +77,7 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost:5000/admin_stats.html">
+                <a class="nav-link active" href="#">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Student Stats</span></a>
             </li>
@@ -146,18 +94,17 @@
                 </button>
 
                 <!-- Topbar Search -->
-                <!-- <form
-                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                            aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                        aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
                     </div>
-                </form> -->
+                </div>
+                </form>
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -213,71 +160,7 @@
 
             </nav>
             <!-- Main Content -->
-            
-                <div class="container-fluid ">
-                    <!-- Content Row -->
-                    <div class="row">
-                        <div class="col-lg-3"> </div>
-                        <div class="col-lg-6">
-                            <form id="testForm">
-                                <h3 class="mb-1 text-gray-800">Create Test</h3>
-                                <div class="form-group">
-                                    <label for="numQuestions">Test title:</label>
-                                    <input type="text" id="title" name="title" class="form-control" minlength="4" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="numQuestions">Number of Questions:</label>
-                                    <input type="number" id="numQuestions" name="numQuestions" class="form-control" required min="1">
-                                </div>
-                
-                                <!-- Subject: "Unknown", "Biochemistry", "Surgery", "Ophthalmology",
-                                "Physiology", "Gynaecology & Obstetrics", "Anaesthesia", "Psychiatry",
-                                "Microbiology", "Medicine", "Pharmacology", "Dental", "ENT",
-                                "Forensic Medicine", "Pediatrics", "Orthopaedics", "Radiology",
-                                "Pathology", "Skin", "Anatomy", "Social & Preventive Medicine" -->
-                                <div class="form-group">
-                                    <label for="subject">Subject of the Test:</label>
-                                    <select type="text" id="subject" name="subject" class="form-control" required>
-                                        <option value="Unknown">Unknown</option>
-                                        <option value="Biochemistry">Biochemistry</option>
-                                        <option value="Surgery">Surgery</option>
-                                        <option value="Ophthalmology">Ophthalmology</option>
-                                        <option value="Physiology">Physiology</option>
-                                        <option value="Gynaecology & Obstetrics">Gynaecology & Obstetrics</option>
-                                        <option value="Anaesthesia">Anaesthesia</option>
-                                        <option value="Psychiatry">Psychiatry</option>
-                                        <option value="Microbiology">Microbiology</option>
-                                        <option value="Medicine">Medicine</option>
-                                        <option value="Pharmacology">Pharmacology</option>
-                                        <option value="Dental">Dental</option>
-                                        <option value="ENT">ENT</option>
-                                        <option value="Forensic Medicine">Forensic Medicine</option>
-                                        <option value="Pediatrics">Pediatrics</option>
-                                        <option value="Orthopaedics">Orthopaedics</option>
-                                        <option value="Radiology">Radiology</option>
-                                        <option value="Pathology">Pathology</option>
-                                        <option value="Skin">Skin</option>
-                                        <option value="Anatomy">Anatomy</option>
-                                        <option value="Social & Preventive Medicine">Social & Preventive Medicine</option>
-                                    </select>
-                                </div>
-                
-                                <div class="form-group">
-                                    <label for="difficulty">Select Difficulty Level:</label>
-                                    <select id="difficulty" name="difficulty" class="form-control" required>
-                                        <option value="Easy">Easy</option>
-                                        <option value="Medium">Medium</option>
-                                        <option value="Hard">Hard</option>
-                                    </select>
-                                </div>
-                                <button type="button" class="btn btn-primary" onclick="receiveTestInfo()">Create Test</button>
-                            </form>
-                        </div>
-                        <div class="col-lg-3"> </div>
-                    </div>
-                    <!-- /.row -->
-                </div>
-            
+            <div id="content" class = "grid-container"></div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -331,7 +214,8 @@
     <!-- Custom scripts for all pages-->
     <script src="/static/js/sb-admin-2.min.js"></script>
     <!-- <script src="dashboard_dynamic.js"></script> -->
-    <script src="/static/createtest.js"></script>
+    <script src="/static/admin_stats.js"></script>
+    <script>onload = getUserList;</script>
 </body>
 
 </html>

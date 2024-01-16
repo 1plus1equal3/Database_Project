@@ -1,8 +1,10 @@
 import pandas as pd
 import pyodbc as pdb
 from datetime import date 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
+import matplotlib.pyplot as plt
+import numpy as np
 
 ### Connect to SQL Server database ###
 # Connect to SQL Server database info
@@ -201,6 +203,76 @@ def create_test(test_info):
         return {'success': False , 'message': 'Test already exists! or Invalid title!'}
     return {'success': True, 'test_id': records[0], 'message': 'Test created successfully!'}
 
+def getUserList():
+    cursor = conn.cursor()
+    query = 'SELECT * FROM dbo.userList();'
+    cursor.execute(query)
+    fetch_result = cursor.fetchall()
+    userList = []
+    for i in fetch_result:
+        user_dict = {
+            'user_id': i[0],
+            'username': i[1],
+            'email': i[2],
+        }
+        userList.append(user_dict)
+    return jsonify(userList)
+
+def statistic(user_id):
+    query = "SELECT * from dbo.Statist(?)"
+    cursor = conn.cursor()
+    cursor.execute(query, user_id)
+    data = cursor.fetchall()
+    statistic_data = {'Number_of_test' : data[0][0], 'Average_score': data[0][1], 'Max_score': data[0][2], 'Min_score': data[0][3]}
+    list_score = []
+    query_score = "SELECT score FROM History WHERE user_id = ?"
+    cursor.execute(query_score, user_id)
+    score = cursor.fetchall()
+    for i in range(len(score)):
+        list_score.append(score[i][0])
+    # Calculate average, max, and min
+    average_value = round(statistic_data['Average_score'], 2)
+    max_value = statistic_data['Max_score']
+    min_value = statistic_data['Min_score']
+    # Plot the list_score as a bar chart
+    plt.clf()
+    plt.ticklabel_format(style='plain',axis='x',useOffset=False)
+    plt.bar(range(len(list_score)), list_score, label='list_score', color='#03A9F4')
+    # Add bars for average, max, and min values
+    plt.axhline(average_value, color='r', linestyle='--', label='Average score')
+    plt.axhline(max_value, color='g', linestyle='--', label='Max score')
+    plt.axhline(min_value, color='b', linestyle='--', label='Min score')
+    # Add labels and title
+    plt.xlabel('Test')
+    plt.ylabel('Score')
+    plt.title('Evaluate study process')
+    # Add legend
+    plt.legend()
+    # Save the plot
+    plt.savefig('System/static/statistic_images/statistic_barchart.png')
+    # Clean up the current plot
+    plt.clf()
+    # Create a pie chart
+    bins = [0, 4, 8, 10]
+    # Use numpy's histogram function to count values in each bin
+    hist, _ = np.histogram(list_score, bins=bins)
+    # Calculate the percentage of values in each bin
+    total_values = len(list_score)
+    percentages = hist / total_values * 100
+    # Labels for different ranges
+    labels = ['Below average', 'Average', 'Good']
+    # Plot the pie chart
+    plt.pie(percentages, labels=labels, autopct='%1.1f%%', startangle=90, colors=['#3498db', '#2ecc71', '#e74c3c', '#f39c12'])
+    # Add title
+    plt.title('Percentage of score')
+    # Show the plot
+    plt.savefig('System/static/statistic_images/statistic_piechart.png')
+    msg = {'success': True, 
+           'average': average_value,
+           'max': max_value,
+           'min': min_value}
+    return jsonify(msg)
+
 ### Server communication ###
 app = Flask(__name__)
 CORS(app)
@@ -251,8 +323,24 @@ def profile_admin_html():
 def create_test_html():
     return render_template('createtests_admin.html')
 
-# API endpoints
+@app.route('/admin_stats.html')
+def admin_stats_html():
+    return render_template('admin_stats.html')
 
+@app.route('/user_stats.html')
+def user_stats_html():
+    return render_template('user_stats.html')
+
+@app.route('/statistic_piechart.png')
+def statistic_piechart():
+    return send_from_directory('static', 'statistic_images/statistic_piechart.png')
+
+@app.route('/statistic_barchart.png')
+def statistic_barchart():
+    return send_from_directory('static', 'statistic_images/statistic_barchart.png')
+
+
+# API endpoints
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -312,6 +400,17 @@ def view_test():
     exam_id = request.args.get('exam_id')
     questionList = show_test(exam_id)
     return questionList
+
+@app.route('/list_user', methods=['GET'])
+def getUserListAPI():
+    userList = getUserList()
+    return userList
+
+@app.route('/statistic', methods=['GET'])
+def statistic_html():
+    user_id = request.args.get('user_id')
+    msg = statistic(user_id)
+    return msg
 
 
 # Start server

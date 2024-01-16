@@ -293,3 +293,23 @@ GO;
 
 --Test create Test
 EXEC createTest 10, 'test_1', '2023-01-12', 1, "Unknown", 1;
+GO;
+
+-- Get User list
+CREATE FUNCTION userList()
+RETURNS TABLE
+AS
+RETURN SELECT user_id, username, email FROM User_info WHERE user_type = 0;
+GO;
+SELECT * FROM dbo.userList();
+
+--Student statistics
+CREATE FUNCTION [dbo].Statist
+(@used_id INT)
+RETURNS TABLE
+AS
+RETURN (
+SELECT COUNT (*) AS num_of_test, AVG(score) AS average_score, MAX(score) 
+AS max_score, MIN(score) AS min_score
+FROM History WHERE user_id = @used_id
+);

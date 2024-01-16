@@ -226,7 +226,29 @@ def statistic(user_id):
     plt.legend()
 
 # Show the plot
-    plt.show()
+    plt.savefig('static_images/statistic_barchart.png')
+
+    bins = [0, 4, 7, 9 ,float('inf')]
+ 
+# Use numpy's histogram function to count values in each bin
+    hist, _ = np.histogram(list_score, bins=bins)
+    
+    # Calculate the percentage of values in each bin
+    total_values = len(list_score)
+    percentages = hist / total_values * 100
+    
+    # Labels for different ranges
+    labels = ['Below average', 'Average', 'Good', 'Excellent']
+    
+    # Plot the pie chart
+    plt.pie(percentages, labels=labels, autopct='%1.1f%%', startangle=90, colors=['#3498db', '#2ecc71', '#e74c3c', '#f39c12'])
+    
+    # Add title
+    plt.title('Percentage of score')
+    
+    # Show the plot
+    plt.savefig('static_images/statistic_piechart.png')
+
     
 
 ### Server communication ###
