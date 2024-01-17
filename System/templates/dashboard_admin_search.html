@@ -29,19 +29,6 @@
         }
     </style>
 
-    <style>
-        .grid-container {
-            display: flex;
-            flex-direction: row; /* Align items vertically */
-            align-items: center; /* Optional: Center-align images */
-        }
-
-        .image-container img {
-            width: 80%; /* Adjust the width of each image */
-            height: auto; /* Maintain the aspect ratio */
-        }
-    </style>
-
     <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
@@ -79,7 +66,6 @@
                 </a>
             </li>
 
-
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link" href="http://localhost:5000/createtests_admin.html">
@@ -89,8 +75,8 @@
             </li>
 
             <!-- Nav Item - Search -->
-            <li class="nav-item">
-                <a class="nav-link" href="http://localhost:5000/dashboard_admin_search.html">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
                     <i class="fa fa-braille"></i>
                     <span>Search Tests</span>
                 </a>
@@ -98,7 +84,7 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link" href="http://localhost:5000/admin_stats.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Student Stats</span></a>
             </li>
@@ -113,19 +99,6 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                <div class="input-group">
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                        aria-label="Search" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
-                            <i class="fas fa-search fa-sm"></i>
-                        </button>
-                    </div>
-                </div>
-                </form>
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -170,6 +143,7 @@
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
+                            
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Logout
@@ -181,9 +155,63 @@
 
             </nav>
             <!-- Main Content -->
-            <h3 class="mb-1 text-gray-800">Student Stats</h3>
-            <div id="chart" class="grid-container"></div>
-            <div id="stats"></div>
+            <div id="content">
+                <div id="search">
+                <h3 class="mb-1 text-gray-800">Search Tests</h3>
+                <form class="navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0" placeholder="Search for..."
+                            aria-label="Search" aria-describedby="basic-addon2" id="searchBar">
+                        
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" id="searchButton" onclick="executeSearch()">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group mt-3">
+                        <label class="mr-2">
+                            <input type="radio" name="searchOption" value="title" checked>
+                            Search with Title
+                        </label>
+                        <label class="mr-2">
+                            <input type="radio" name="searchOption" value="id">
+                            Search with ID
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <!-- <div id="searchContent" class = "grid-container">
+
+            </div> -->
+                
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                            aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 small"
+                                        placeholder="Search for..." aria-label="Search"
+                                        aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -236,8 +264,9 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/static/js/sb-admin-2.min.js"></script>
-    <script src="/static/user_stats.js"></script>
-    <script>onload = getUserStats;</script>
+    <!-- <script src="dashboard_dynamic.js"></script> -->
+    <script src="/static/dashboard_admin_search.js"></script>
+    <!-- <script>window.onload = loadQuestion;</script> -->
 </body>
 
 </html>

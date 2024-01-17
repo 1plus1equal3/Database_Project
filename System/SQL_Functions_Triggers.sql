@@ -108,6 +108,18 @@ AS
 RETURN SELECT * FROM request_exam_list;
 GO;
 
+-- Query exam created by admin
+CREATE FUNCTION request_admin_exam(@admin_id INT)
+RETURNS TABLE
+AS
+RETURN SELECT * FROM Test WHERE admin_id = @admin_id;
+GO;
+
+-- Test query exam by admin id
+SELECT * FROM User_info;
+SELECT * FROM dbo.request_admin_exam(13);
+GO;
+
 --Error
 CREATE FUNCTION request_exam_1()
 RETURNS TABLE
@@ -301,7 +313,10 @@ RETURNS TABLE
 AS
 RETURN SELECT user_id, username, email FROM User_info WHERE user_type = 0;
 GO;
+
+--Test user list function
 SELECT * FROM dbo.userList();
+GO;
 
 --Student statistics
 CREATE FUNCTION [dbo].Statist
@@ -313,6 +328,7 @@ SELECT COUNT (*) AS num_of_test, AVG(score) AS average_score, MAX(score)
 AS max_score, MIN(score) AS min_score
 FROM History WHERE user_id = @used_id
 );
+GO;
 
 --Search question by subject
 CREATE PROCEDURE SearchQuesSubject

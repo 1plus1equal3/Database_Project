@@ -25,13 +25,21 @@ function createExamDiv(jsonData) {
       image.src = "/static/course.png";
       image.width = "100";
       image.height = "100";
-
+      difficulty = 'Easy';
+      if(item.difficulty == 2){
+        difficulty = 'Medium';
+      }else if(item.difficulty == 3){
+        difficulty = 'Hard';
+      }
+      subject = item.subject;
+      if(subject == null) subject = 'Multiple Subjects';
       // Add exam details to the card body
       cardBodyElement.appendChild(image);
       cardBodyElement.innerHTML += `
           <div class="ml-3">
               <strong>Title:</strong> ${item.title} <br>
-              <strong>Date Created:</strong> ${item.date_created} <br>
+              <strong>Subject:</strong> ${subject} <br>
+              <strong>Difficulty:</strong> ${difficulty} <br>
           </div>
       `;
 
@@ -47,7 +55,7 @@ function createExamDiv(jsonData) {
 }
 
 function loadQuestion(){
-    fetch('http://localhost:5000/request_exam', {
+    fetch('http://localhost:5000/request_admin_exam' + '?id=' + localStorage.getItem('user_id'), {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',

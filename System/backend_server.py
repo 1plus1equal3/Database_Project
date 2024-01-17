@@ -106,6 +106,23 @@ def requestExam():
         examList.append(test_dict)
     return jsonify(examList)
 
+def getAdminExam(user_id):
+    cursor = conn.cursor()
+    query = 'SELECT * FROM dbo.request_admin_exam(?);'
+    cursor.execute(query, user_id)
+    fetch_result = cursor.fetchall()
+    examList = []
+    for i in fetch_result:
+        test_dict = {
+            'exam_id': i[0],
+            'title': i[1],
+            'date_created': i[2],
+            'subject': i[4],
+            'difficulty': i[5]
+        }
+        examList.append(test_dict)
+    return jsonify(examList)
+
 def show_test(exam_id):
     cursor = conn.cursor()
     query = "EXEC GetTestQuestions @TestID = ?"
@@ -169,8 +186,9 @@ def search_test(search_request):
     if type == 1: #search by id
         cursor.execute(query_id, int(search_request['search']))
         info = cursor.fetchall()
-        test = {'exam_id': info[0][0], 'Title': info[0][1], 'Admin': info[0][3], 'Date': info[0][2]}
-        return jsonify(test)
+        list_test = []
+        list_test.append({'exam_id': info[0][0], 'Title': info[0][1], 'Admin': info[0][3], 'Date': info[0][2]})
+        return jsonify(list_test)
     else:
         cursor.execute(query_title, search_request['search'])
         info = cursor.fetchall()
@@ -346,6 +364,10 @@ def profile_admin_html():
 def create_test_html():
     return render_template('createtests_admin.html')
 
+@app.route('/dashboard_admin_search.html')
+def search_admin_html():
+    return render_template('dashboard_admin_search.html')
+
 @app.route('/admin_stats.html')
 def admin_stats_html():
     return render_template('admin_stats.html')
@@ -387,6 +409,12 @@ def request_exam():
     examList = requestExam()
     print(examList)
     return examList
+
+@app.route('/request_admin_exam', methods=['GET'])
+def request_admin_exam():
+    user_id = request.args.get('id')
+    list = getAdminExam(user_id)
+    return list
 
 @app.route('/exam', methods=['GET'])
 def exam():

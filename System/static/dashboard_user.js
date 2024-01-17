@@ -1,3 +1,6 @@
+var username = localStorage.getItem("username");
+      document.getElementById("username").textContent = username;
+
 function createExamDiv(jsonData) {
   var container = document.getElementById("content");
 
@@ -55,6 +58,4 @@ function loadQuestion(){
             console.log(data);
             createExamDiv(data);
       })
-      var username = localStorage.getItem("username");
-      document.getElementById("username").textContent = username;
-}
+    }

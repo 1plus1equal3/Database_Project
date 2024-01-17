@@ -44,26 +44,7 @@ function generateQuestionList(questions) {
         `;
 
         butt.addEventListener('click', function() {
-            var selectedOption = getSelectedOption(index);
-            // Check if question_id is already in selectedOptions
-            if (selectedOptions.some(e => e.question_id === question.question_id)) {
-                // Update answer
-                selectedOptions.forEach((option, index) => {
-                    if (option.question_id === question.question_id) {
-                        selectedOptions[index]['answer'] = selectedOption;
-                    }
-                });
-            } else {
-                selectedOptions.push({'answer': selectedOption, 'question_id': question.question_id}) // Store selected option in array
-            }
-            //finalAnswer = selectedOptions.map(jsonString => JSON.parse(jsonString));
-            if (selectedOptions[index] !== null) {
-                console.log("Question_id: " + question.question_id + " selected option: " + selectedOptions[index]['answer']);
-            } else {
-                console.log("No option selected for question " + index);
-            }
-            var box = document.getElementById(`box_${index+1}`);
-            box.style.backgroundColor = "grey";
+            handleQuestionSubmit(index, question);
         });
         //console.log(typeof(selectedOptions))
         //console.log(typeof(JSON.stringify(selectedOptions)))
@@ -95,36 +76,29 @@ function generateQuestionList(questions) {
            console.log(selectedOptions)
            console.log(user_id)
            submitAnswer();
-    //     // Call testAsssessment on final test submission
      });
  
     qbox.appendChild(finalSubmitButton);
- 
-    //SEND TO SERVER
-   
-    /*
-    fetch('http://localhost:5000/test_interface', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(selectedOptions),
-      })
-          .then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert('Submit successfully');
-                  //var newUrl = "dashboard_user.html";
-                  //window.location = newUrl;
-              } else {
-                  alert('Submit fail');
-              }
-          })
-          .catch((error) => {
-              console.error('Error:', error);
-          });
-    */
- 
+}
+
+function handleQuestionSubmit(index, question) {
+    var selectedOption = getSelectedOption(index);
+
+    // Check if question_id is already in selectedOptions
+    var existingOptionIndex = selectedOptions.findIndex(e => e.question_id === question.question_id);
+
+    if (existingOptionIndex !== -1) {
+        // Update answer
+        selectedOptions[existingOptionIndex].answer = selectedOption;
+    } else {
+        // Store selected option in array
+        selectedOptions.push({ 'answer': selectedOption, 'question_id': question.question_id });
+    }
+
+
+    // Change background color after submission
+    var box = document.getElementById(`box_${index + 1}`);
+    box.style.backgroundColor = "grey";
 }
  
  
