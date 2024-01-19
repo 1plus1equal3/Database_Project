@@ -34,6 +34,7 @@ GO;
 select dbo.checkUserRole(1);
 
 --Sign up store_procedure
+drop proc func_register;
 CREATE PROC func_register 
 (@u_name nvarchar(255), @u_pass nvarchar(255), @email nvarchar(255))
 AS
@@ -41,20 +42,23 @@ BEGIN
 DECLARE @name INT;
 SELECT @name = COUNT(username) FROM User_info WHERE username = @u_name;
 IF @name <> 0 --If not return -1
-RETURN -1
---Else insert and return 0
+BEGIN
+SELECT -1
+RETURN
+END
+ELSE --Else insert and return 0
+BEGIN
 INSERT INTO User_info(username, user_password, email, user_type)
 VALUES (@u_name, @u_pass, @email, 0);
 COMMIT
-RETURN 1
-END;
+SELECT 1
+RETURN
+END
+END
 GO;
 
 --Test register
-DECLARE @result INT;
-EXEC @result = func_register 'test', 'test', 'test@gmail.com';
-SELECT @result;
-
+EXEC func_register 'test', 'test', 'test@gmail.com';
 SELECT * FROM User_info;
 GO;
 
@@ -108,6 +112,18 @@ AS
 RETURN SELECT * FROM request_exam_list;
 GO;
 
+--Test request_exam
+SELECT * FROM dbo.request_exam();
+GO;
+
+--Error
+CREATE FUNCTION request_exam_1()
+RETURNS TABLE
+AS
+RETURN (SELECT TOP 10 * FROM Test
+ORDER BY NEWID());
+GO;
+
 -- Query exam created by admin
 CREATE FUNCTION request_admin_exam(@admin_id INT)
 RETURNS TABLE
@@ -120,17 +136,7 @@ SELECT * FROM User_info;
 SELECT * FROM dbo.request_admin_exam(13);
 GO;
 
---Error
-CREATE FUNCTION request_exam_1()
-RETURNS TABLE
-AS
-RETURN (SELECT TOP 10 * FROM Test
-ORDER BY NEWID());
-GO;
 
---Test request_exam
-SELECT * FROM dbo.request_exam();
-GO;
 
 CREATE PROCEDURE GetTestQuestions
 (@TestID INT)
@@ -207,7 +213,8 @@ WHERE h.user_id = @user_id);
 GO;
 
 --Test request_user_history
-SELECT * FROM dbo.request_user_history(6);
+SELECT * FROM User_info;
+SELECT * FROM dbo.request_user_history(14);
 GO;
 
 -- Search Test by title
@@ -341,7 +348,7 @@ END;
 GO;
 
 --Test search question by subject
-exec SearchQuesSubject @subject = 'Medi';
+EXEC SearchQuesSubject @subject = 'Medi';
 GO;
 
 --Search question by content
@@ -355,5 +362,5 @@ END;
 GO;
 
 --Test search Question by content
-exec SearchQuesContent @content = 'What';
+EXEC SearchQuesContent @content = 'What';
 GO;

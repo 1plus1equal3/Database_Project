@@ -42,7 +42,10 @@ def register_user(user):
     email = user.get('email')
 
     # User validation
-    select_query = f"""select dbo.checkUser('{username}');"""
+    select_query = f"""
+    SET NOCOUNT ON;
+    EXEC func_register '{username}', '{password}', '{email}';
+    """
     cursor = conn.cursor()
     cursor.execute(select_query)
     records = cursor.fetchone()
@@ -51,9 +54,6 @@ def register_user(user):
         msg = jsonify({'success': False, 'error': 'Username already exists'})
         return msg
     msg = jsonify({'success': True})
-    select_query = f"""EXEC func_register '{username}', '{password}', '{email}';"""
-    cursor = conn.cursor()
-    cursor.execute(select_query)
     return msg
     
 
