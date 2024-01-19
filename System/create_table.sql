@@ -57,6 +57,13 @@ CREATE TABLE Test (
 EXEC sp_columns Test;
 SELECT * FROM Test;
 
+--Reset identity to current max identity
+DECLARE @max int
+SELECT @max=MAX(test_id) FROM Test
+IF @max IS NULL   --check when max is returned as null
+  SET @max = 0
+DBCC CHECKIDENT ('Test', RESEED, @max)
+
 --Test question table
 DROP TABLE Test_question;
 CREATE TABLE Test_question(

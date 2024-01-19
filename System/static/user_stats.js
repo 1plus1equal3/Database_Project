@@ -39,7 +39,7 @@ function getUserStats(){
             statistic.className = "row";
             var maxValue = document.createElement("div");
             maxValue.className = "col";
-            maxValue.textContent = "Max Score: " + data.max;
+            maxValue.textContent = " Max Score: " + data.max;
             var minValue = document.createElement("div");
             minValue.className = "col";
             minValue.textContent = "Min Score: " + data.min;

@@ -29,7 +29,8 @@ function createExamDiv(jsonData) {
           </label>
       </div>
   </form>
-</div>`;
+</div>
+<div id="searchContent"></div>`;
 
   // Iterate over each JSON object and create card elements
   jsonData.forEach(function (item, index) {

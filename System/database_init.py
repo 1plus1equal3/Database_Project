@@ -1,6 +1,7 @@
 import pyodbc as pdb
 import json
 import random
+from datetime import date 
 
 ### Connect to SQL Server database ###
 # Connect to SQL Server database info
@@ -82,11 +83,55 @@ def create_explaination_table():
         conn.commit()
     return 'Explaination table created!'
 
+def create_test(test_info):
+    title = test_info.get('title')
+    question_number = test_info.get('numQuestions')
+    subject = test_info.get('subject')
+    difficulty = test_info.get('difficulty')
+    if difficulty == 'Easy':
+        difficulty = 1
+    elif difficulty == 'Medium':
+        difficulty = 2
+    else:
+        difficulty = 3
+    admin_id = test_info.get('admin_id')
+    query_question = """
+    SET NOCOUNT ON;
+    EXEC createTest ?, ?, ?, ?, ?, ?;
+    """
+    cursor = conn.cursor()
+    cursor.execute(query_question, question_number, title, date.today(), admin_id, subject, difficulty)
+    records = cursor.fetchone()
+    conn.commit()
+    if records[0] == 0:
+        return {'success': False , 'message': 'Test already exists! or Invalid title!'}
+    return {'success': True, 'test_id': records[0], 'message': 'Test created successfully!'}
+
 
 ### Main ###
 if __name__ == '__main__':
-    #print(create_question_table())
-    #print(create_answer_table())
-    print(create_explaination_table())
+    Subject = ["Unknown", "Biochemistry", "Surgery", "Ophthalmology",
+                "Physiology", "Gynaecology & Obstetrics", "Anaesthesia", "Psychiatry",
+                "Microbiology", "Medicine", "Pharmacology", "Dental", "ENT",
+                "Forensic Medicine", "Pediatrics", "Orthopaedics", "Radiology",
+                "Pathology", "Skin", "Anatomy", "Social & Preventive Medicine"]
+    difficulty = ['Easy', 'Medium', 'Hard']
+    # Generate 100 sample tests
+    for i in range (99, 121):
+        # Get random subject
+        subject = random.choice(Subject)
+        # Get random difficulty
+        level = random.choice(difficulty)
+        # Get random number of questions
+        numQuestions = random.randint(1, 5) * 10
+        test_info = {
+            'title': f'sample_test_{i}',
+            'numQuestions': numQuestions,
+            'subject': subject,
+            'difficulty': level,
+            'admin_id': 1
+        }
+        msg = create_test(test_info)
+        print(msg)
     conn.close()
 

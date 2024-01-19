@@ -98,7 +98,8 @@ function handleQuestionSubmit(index, question) {
 
     // Change background color after submission
     var box = document.getElementById(`box_${index + 1}`);
-    box.style.backgroundColor = "grey";
+    box.style.backgroundColor = "#4e73df ";
+    box.style.color = "white";
 }
  
  
