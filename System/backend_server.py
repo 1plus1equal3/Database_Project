@@ -198,27 +198,22 @@ def search_test(search_request):
         return jsonify(list_test)
     
 def search_question(search_request):
-    type = search_request['option']
+    query = "EXEC searchQuestion @content = ?, @subject = ?, @level = ?"
+    level = 1
+    if search_request['difficulty'] == 'Medium':
+        level = 2
+    elif search_request['difficulty'] == 'Hard':
+        level = 3
+    question_info = []
     cursor = conn.cursor()
-    query_subject = 'EXEC SearchQuesSubject @subject = ?'
-    query_content = 'EXEC SearchQuesContent @content = ?'
-    get_answer = 'EXEC GetAnswerText @question_id = ?'
-    list_question = []
-    if type == 1: #search by subject
-        cursor.execute(query_subject, search_request['search'])
-        info = cursor.fetchall()
-        for i in range(info):
-            cursor.execute(get_answer, info[i][0])
-            answer_list = cursor.fetchall()
-            list_question.append({'question': info[i][1], 'opt_a': answer_list[0][0], 'opt_b': answer_list[1][0], 'opt_c': answer_list[2][0], 'opt_d': answer_list[3][0]})
-    else:
-        cursor.execute(query_content, search_request['search'])
-        info = cursor.fetchall()
-        for i in range(info):
-            cursor.execute(get_answer, info[i][0])
-            answer_list = cursor.fetchall()
-            list_question.append({'question': info[i][1], 'opt_a': answer_list[0][0], 'opt_b': answer_list[1][0], 'opt_c': answer_list[2][0], 'opt_d': answer_list[3][0]})
-    return jsonify(list_question)
+    cursor.execute(query, search_request['search'], search_request['subject'], level)
+    info = cursor.fetchall()
+    for i in range(len(info)):
+        query = "EXEC getAnswerText @question_ID = ?"
+        cursor.execute(query, info[i][0])
+        answer = cursor.fetchall()
+        question_info.append({'question_id': info[i][0], 'content': info[i][1], 'level': info[i][2], 'subject': info[i][3], 'opt_a': answer[0][0], 'opt_b': answer[1][0], 'opt_c': answer[2][0], 'opt_d': answer[3][0]})
+    return jsonify(question_info)
     
 def create_test(test_info):
     title = test_info.get('title')
@@ -363,6 +358,10 @@ def profile_admin_html():
 @app.route('/createtests_admin.html')
 def create_test_html():
     return render_template('createtests_admin.html')
+
+@app.route('/admin_search_question.html')
+def search_question_html():
+    return render_template('admin_search_question.html')
 
 @app.route('/dashboard_admin_search.html')
 def search_admin_html():

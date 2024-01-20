@@ -390,3 +390,27 @@ GO;
 --Test search Question by content
 EXEC SearchQuesContent @content = 'What';
 GO;
+
+--Search question
+DROP PROC searchQuestion;
+GO;
+
+CREATE PROC searchQuestion
+(@content VARCHAR(255), @subject VARCHAR(255), @level INT)
+AS
+BEGIN
+IF (@subject) = 'Unknown'
+SELECT TOP 20 * FROM Question
+WHERE question_content LIKE '%' + @content + '%'
+AND level = @level
+ELSE
+SELECT TOP 20 * FROM Question
+WHERE question_content LIKE '%' + @content + '%'
+AND level = @level
+AND subject = @subject
+END;
+GO;
+
+--Test search question
+EXEC searchQuestion 'What', 'Skin', 1;
+GO;
