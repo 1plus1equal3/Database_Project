@@ -383,6 +383,29 @@ def statistic_piechart():
 def statistic_barchart():
     return send_from_directory('static', 'statistic_images/statistic_barchart.png')
 
+@app.route('/class.html')
+def class_html():
+    return render_template('class.html')
+
+@app.route('/create_class.html')
+def create_class_html():
+    return render_template('create_class.html')
+
+@app.route('/delete_class.html')
+def delete_class_html():
+    return render_template('delete_class.html')
+
+@app.route('/class_interface.html')
+def class_interface_html():
+    return render_template('class_interface.html')
+
+@app.route('/add_student_to_class.html')
+def add_student_to_class_html():
+    return render_template('add_student_to_class.html')
+
+@app.route('/delete_student_from_class.html')
+def delete_student_from_class_html():
+    return render_template('delete_student_from_class.html')
 
 # API endpoints
 @app.route('/register', methods=['POST'])
