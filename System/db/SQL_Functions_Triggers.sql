@@ -414,3 +414,47 @@ GO;
 --Test search question
 EXEC searchQuestion 'What', 'Skin', 1;
 GO;
+
+-- View classes belong to the teacher
+CREATE PROCEDURE viewTeacherClasses(@teacherId INT)
+AS
+BEGIN
+	IF NOT EXISTS (SELECT * FROM Class WHERE teacher_id = @teacherId)
+		BEGIN
+			PRINT 'You have no classes'
+			SELECT -1
+		END
+	ELSE
+		BEGIN
+			SELECT * FROM Class WHERE teacher_id = @teacherId
+		END
+END;
+GO;
+
+--Test query class
+EXEC viewTeacherClasses 13;
+GO;
+
+-- createNewClass
+DROP PROC createClass;
+GO;
+
+CREATE PROCEDURE createClass(@teacherId INT, @className VARCHAR(50))
+AS
+BEGIN
+	IF EXISTS (SELECT * FROM Class WHERE class_name = @className)
+		BEGIN
+			PRINT 'This class name has been used'
+			SELECT 0
+		END
+	ELSE
+		BEGIN
+			INSERT INTO Class(teacher_id, class_name, number_student)
+            VALUES (@teacherId, @className, 0)
+            SELECT 1
+		END
+END;
+GO;
+
+--Test create new class
+exec createClass @teacherId = 13, @className = 'class_06';

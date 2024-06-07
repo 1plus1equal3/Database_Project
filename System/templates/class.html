@@ -17,7 +17,58 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <script>
+        function showPopup() {
+            swal({
+                title: "Create a new class",
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Enter class name",
+                        type: "text",
+                        id: "class_name"
+                    },
+                },
+                icon: "info",
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "cancel",
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "Confirm",
+                        value: true,
+                        visible: true,
+                        className: "confirm",
+                        closeModal: true
+                    }
+                    },
+                })
+                .then((value) => {
+                    if (value!=null)
+                        return fetch('http://localhost:5000/create_class', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                class_name: value,
+                                user_id: localStorage.getItem('user_id')
+                            })
+                        });
+                })
+                .then(response => {
+                    if (response.success) {
+                        swal("Class created", "You can now enter the new class", "success");
+                        window.location.reload();
+                    } else swal("Cannot create class", "Please try again", "error");
+                });
+            }
+    </script>
     <!-- Custom styles for this template-->
     <style>
         .h3.mb-1.text-gray-800 {
@@ -84,7 +135,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!-- <h6 class="collapse-header">Custom Components:</h6> -->
                         <a class="collapse-item" href="class.html">My class</a>
-                        <a class="collapse-item" href="create_class.html">Create class</a>
+                        <a class="collapse-item" onclick="showPopup()">Create class</a>
                         <a class="collapse-item" href="delete_class.html">Delete class</a>
                     </div>
                 </div>
@@ -152,14 +203,14 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <!-- get name of user -->
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Chau.TT215182</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username"></span>
                             <img class="img-profile rounded-circle"
                                 src="/static/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" id="profile_url" href="http://localhost:5000/profile_admin.html">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
@@ -238,6 +289,8 @@
     <script src="/static/js/sb-admin-2.min.js"></script>
     <!-- <script src="dashboard_dynamic.js"></script> -->
     <script src="/static/class.js"></script>
+    <!-- Load class upon load page -->
+    <script>window.onload = getClass;</script>
 </body>
 
 </html>

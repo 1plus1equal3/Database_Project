@@ -33,6 +33,7 @@ function createExamDiv(jsonData) {
       }
       subject = item.subject;
       if(subject == null) subject = 'Multiple Subjects';
+      
       // Add exam details to the card body
       cardBodyElement.appendChild(image);
       cardBodyElement.innerHTML += `

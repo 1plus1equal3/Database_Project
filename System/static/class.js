@@ -18,8 +18,9 @@ function generateClassList(Class_list) {
 
             cardBodyElement.innerHTML += `
                 <div class="ml-3">
-                    <strong>Title:</strong> ${item.name} <br>
-                    <strong>Date Created:</strong> ${item.ID} <br>
+                    <strong>Class Name:</strong> ${item.title} <br>
+                    <strong>Date Created:</strong> ${item.date} <br>
+                    <strong>Number of students:</strong> ${item.std_num}<br>
                 </div>
       `     ;
 
@@ -37,38 +38,17 @@ function generateClassList(Class_list) {
 // use getExams() instead of generateExamList() in dashboard_user.html
 // when call API to fetch real data
 
-function getExams(){
-    fetch("http://localhost:5000/request_exam")
+function getClass(){
+    user_id = localStorage.getItem("user_id");
+    fetch("http://localhost:5000/request_class" + "?id=" + user_id)
       .then(response => response.json())
       .then(data => {
             console.log(data);
-            generateExamList(data);
+            generateClassList(data);
       })
+    user_name = document.getElementById("username");  
+    user_name.innerHTML = localStorage.getItem("username");
+    profile = document.getElementById("profile_url");
+    profile.href = "http://localhost:5000/profile_admin.html"
 }
 
-generateClassList([
-    {
-        name: "name1",
-        ID: "question1",
-    },
-    {
-        name: "name2",
-        ID: "question2",
-    },
-    {
-        name: "name2",
-        ID: "question2",
-    },
-    {
-        name: "name2",
-        ID: "question2",
-    },
-    {
-        name: "name2",
-        ID: "question2",
-    },
-    {
-        name: "name2",
-        ID: "question2",
-    },
-]);

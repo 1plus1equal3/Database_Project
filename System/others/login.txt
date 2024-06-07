@@ -1,3 +1,4 @@
+#### Teacher ####
 username    password
 
 duy         vandangfixbug123
@@ -6,3 +7,12 @@ chau        fixxonglaibug789
 huy         bugxonglaifix123
 tester      tester
 admin       admin
+
+
+#### Student ####
+username    password
+
+user01      12345
+user02      12345
+user03      12345
+user04      12345

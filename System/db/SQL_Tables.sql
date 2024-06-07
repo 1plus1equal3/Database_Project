@@ -83,3 +83,37 @@ CREATE TABLE History(
 );
 EXEC sp_columns History;
 Select * FROM History;
+
+--Class table
+DROP TABLE Class;
+CREATE TABLE Class(
+  class_id INT IDENTITY(1,1) PRIMARY KEY,
+  teacher_id INT,
+  class_name VARCHAR(50) UNIQUE,
+  number_student INT NOT NULL DEFAULT 0,
+  create_date date NOT NULL DEFAULT GETDATE()
+);
+EXEC sp_columns Class;
+Select * FROM Class;
+
+--Add test data
+INSERT INTO Class(teacher_id, class_name) VALUES
+(13, 'class_01'),
+(13, 'class_02'),
+(13, 'class_03'),
+(13, 'class_04'),
+(13, 'class_05');
+
+CREATE TABLE Class_user(
+  class_id INT,
+  user_id INT,
+  FOREIGN KEY(class_id) REFERENCES Class(class_id),
+  FOREIGN KEY(user_id) REFERENCES User_info(user_id)
+)
+
+CREATE TABLE Class_test(
+  class_id INT,
+  test_id INT,
+  FOREIGN KEY(class_id) REFERENCES Class(class_id),
+  FOREIGN KEY(test_id) REFERENCES Test(test_id)
+)

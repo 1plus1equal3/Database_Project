@@ -1,4 +1,3 @@
-import pandas as pd
 import pyodbc as pdb
 from datetime import date 
 from flask import Flask, request, jsonify, render_template, send_from_directory
@@ -36,6 +35,8 @@ def hash(password):
         hashed_password += chr(temp % 87 + 40)
     return hashed_password
 
+### Authentication functions ###
+
 def register_user(user):
     username = user.get('username')
     password = hash(user.get('password'))
@@ -56,7 +57,7 @@ def register_user(user):
     msg = jsonify({'success': True})
     return msg
     
-
+#!TODO: Change the query
 def login_user(user):
     username = user.get('username')
     password = hash(user.get('password'))
@@ -72,7 +73,7 @@ def login_user(user):
     user_type = cursor.fetchone()[0]
     return jsonify({'success': True, 'user_id': user_id, 'username': username, 'user_type': user_type})
         
-
+### User information functions ###
 def get_user_info(id):
     query = 'EXEC getUserInfo @user_id = ?;'
     cursor = conn.cursor() 
@@ -309,6 +310,39 @@ def statistic(user_id):
            'min': min_value}
     return jsonify(msg)
 
+def getClassFromDB(teacher_id):
+    # Query database for data
+    query = 'EXEC dbo.viewTeacherClasses @teacherId = ?'
+    cursor = conn.cursor()
+    cursor.execute(query, teacher_id)
+    data = cursor.fetchall()
+    # Structure data
+    classList = []
+    for i in data:
+        class_data = {
+            'title': i[2],
+            'std_num': i[3],
+            'date': i[4]
+        }
+        classList.append(class_data)
+    cursor.commit()
+    # Return json data
+    return jsonify(classList)
+
+def createNewClass(info):
+    class_name = info.get('class_name')
+    teacher_id = info.get('user_id')
+    query = 'EXEC dbo.createClass @teacherId = ?, @className = ?'
+    cursor = conn.cursor()
+    cursor.execute(query, teacher_id, class_name)
+    response = cursor.fetchone()
+    conn.commit()
+    if response[0] == 0:
+        return {'success': False, 'message': 'Class already exists!'}
+    else:
+        return {'success': True, 'message': 'Class created successfully!'}
+    
+
 ### Server communication ###
 app = Flask(__name__)
 CORS(app)
@@ -386,10 +420,6 @@ def statistic_barchart():
 @app.route('/class.html')
 def class_html():
     return render_template('class.html')
-
-@app.route('/create_class.html')
-def create_class_html():
-    return render_template('create_class.html')
 
 @app.route('/delete_class.html')
 def delete_class_html():
@@ -490,6 +520,18 @@ def statistic_html():
     user_id = request.args.get('user_id')
     msg = statistic(user_id)
     return msg
+
+@app.route('/request_class', methods=['GET'])
+def request_class():
+    teacher_id = request.args.get('id')
+    classes = getClassFromDB(teacher_id)
+    return classes
+
+@app.route('/create_class', methods=['POST'])
+def create_new_class():
+    class_info = request.get_json()
+    response = createNewClass(class_info)
+    return response
 
 
 # Start server
