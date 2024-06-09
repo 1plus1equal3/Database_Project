@@ -74,9 +74,9 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="class_result.html">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>View students</span>
+                    <span>Class's result</span>
                 </a>
             </li>
 
@@ -132,14 +132,14 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <!-- get name of user -->
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Chau.TT215182</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username">Chau.TT215182</span>
                             <img class="img-profile rounded-circle"
                                 src="/static/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="profile_admin.html">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
@@ -182,9 +182,11 @@
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Number of tests</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">10</div>
+                                        <a class="nav-link" href="test_list.html">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Number of tests</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id = "NumberOfTest">10</div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -235,25 +237,62 @@
                         </div>
                     </div>
             </div>
+                <!--Display the list of students in the class-->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h4 class="m-0 font-weight-bold text-primary">Class's students</h4>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Student's ID</th>
-                                        <th>Best result</th>
-                                        <th>Average result</th>
-                                        <th>Number of test taken</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dataTableBody">
-                                </tbody>
-                            </table>
+                        <form class="navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0" placeholder="Search for..."
+                                    aria-label="Search" aria-describedby="basic-addon2" id="searchBar">
+                                
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" id="searchButton" onclick="executeSearch()">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="input-group mt-3">
+                                <label class="mr-2">
+                                    <input type="radio" name="searchOption" value="title" checked>
+                                    Search with name
+                                </label>
+                                <label class="mr-2">
+                                    <input type="radio" name="searchOption" value="id">
+                                    Search with ID
+                                </label>
+                            </div>
+                        </form>
+                        <br>
+                        <div class="outer-wrapper">
+                            <div class="table-wrapper">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="overflow-y: auto">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Student's name</th>
+                                                <th>Student's ID</th>
+                                                <th>Best result</th>
+                                                <th>Average result</th>
+                                                <th>Number of test taken</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dataTableBody">
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination">
+                                        <button id = "prevBtn">
+                                            Previous page
+                                        </button>
+                                        <button id="nextBtn">
+                                            Next page
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,3 +1,6 @@
+var username = localStorage.getItem("username");
+document.getElementById("username").textContent = username;
+
 function AddStudent() {
     var student_name = document.getElementById("student_name");
     var student_id = document.getElementById("student_id");

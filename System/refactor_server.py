@@ -7,8 +7,15 @@ from api import *
 app = Flask(__name__)
 CORS(app)
 
+# API endpoints
+#! User pages
+
 @app.route('/')
 def home():
+    return render_template('login.html')
+
+@app.route('/login.html')
+def login_html():
     return render_template('login.html')
 
 @app.route('/register.html')
@@ -39,6 +46,16 @@ def search_html():
 @app.route('/profile.html')
 def profile_html():
     return render_template('profile.html')
+
+@app.route('/student_class.html')
+def student_class_html():
+    return render_template('student_class.html')
+
+@app.route('/student_class_interface.html')
+def student_class_interface_html():
+    return render_template('student_class_interface.html')
+
+#! Admin pages
 
 @app.route('/test_view.html')
 def test_view_html():
@@ -96,6 +113,10 @@ def add_student_to_class_html():
 @app.route('/delete_student_from_class.html')
 def delete_student_from_class_html():
     return render_template('delete_student_from_class.html')
+
+@app.route('/class_result.html')
+def class_result_html():
+    return render_template('class_result.html')
 
 # API endpoints
 @app.route('/register', methods=['POST'])

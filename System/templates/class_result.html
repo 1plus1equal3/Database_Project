@@ -42,7 +42,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard_admin.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -53,35 +53,44 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="#">
+            <li class="nav-item">
+                <a class="nav-link" href="class_interface.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>Your class</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost:5000/history.html">
+                <a class="nav-link" href="add_student_to_class.html">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>My Tests</span>
+                    <span>Add students to class</span>
                 </a>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost:5000/dashboard_user_search.html">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Search Tests</span>
+                <a class="nav-link" href="delete_student_from_class.html">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Delete students from class</span>
+                </a>
+            </li>
+
+            <li class="nav-item active">
+                <a class="nav-link" href="class_result.html">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Class's result</span>
                 </a>
             </li>
 
             <!-- Divider -->
+            <!-- <hr class="sidebar-divider my-0"> -->
+
+
+            <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="student_class.html">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>My Class</span>
+                <a class="nav-link" href="class.html">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Return</span>
                 </a>
             </li>
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -93,22 +102,6 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                <!-- Topbar Search -->
-                <!-- <form
-                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                            aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form> -->
-
-                <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
 
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
@@ -134,32 +127,22 @@
                             </form>
                         </div>
                     </li>
-
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <!-- get name of user -->
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username"></span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username">Chau.TT215182</span>
                             <img class="img-profile rounded-circle"
                                 src="/static/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="http://localhost:5000/profile.html">
+                            <a class="dropdown-item" href="profile_admin.html">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
-                            <!-- <a class="dropdown-item" href="#">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
-                            </a> -->
-                            <!-- <div class="dropdown-divider"></div> -->
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Logout
@@ -171,9 +154,68 @@
 
             </nav>
             <!-- Main Content -->
-            <div id="content" class = "grid-container"></div>
             <!-- End of Main Content -->
-
+                <!-- DataTales Example -->
+                <div class="card-header py-3">
+                    <h1 class="m-0 font-weight-bold text-primary">Class ICT-K66</h1>
+                </div>
+            <div class="container-fluid"> 
+                <div class="row">
+                    <!-- Earnings (Monthly) Card Example -->
+            </div>
+                <!--Display the list of students in the class-->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-primary">Class' result</h4>
+                    </div>
+                    <div class="card-body">
+                        <form class="navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0" placeholder="Enter student's name"
+                                    aria-label="Search" aria-describedby="basic-addon2" id="searchBarStudentName">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0" placeholder="Enter test's name"
+                                    aria-label="Search" aria-describedby="basic-addon2" id="searchBarTestID">
+                                
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" id="searchButton" onclick="SingleOrDual()">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <div class="outer-wrapper">
+                            <div class="table-wrapper">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="overflow-y: auto">
+                                        <thead id="dataTableHead">
+                                        </thead>
+                                        <tbody id="dataTableBody">
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination">
+                                        <button id = "firstBtn">
+                                            First page
+                                        </button>
+                                        <button id = "prevBtn">
+                                            Previous page
+                                        </button>
+                                        <button id="nextBtn">
+                                            Next page
+                                        </button>
+                                        <button id = "lastBtn">
+                                            Last page
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="content" class = "grid-container"></div>
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -209,7 +251,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="http://localhost:5000/">Logout</a>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
                 </div>
             </div>
         </div>
@@ -225,8 +267,7 @@
     <!-- Custom scripts for all pages-->
     <script src="/static/js/sb-admin-2.min.js"></script>
     <!-- <script src="dashboard_dynamic.js"></script> -->
-    <script src="/static/dashboard_user.js"></script>
-    <script>window.onload = loadQuestion;</script>
+    <script src="/static/class_result.js"></script>
 </body>
 
 </html>

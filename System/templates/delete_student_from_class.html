@@ -53,7 +53,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="class_interface.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Your class</span></a>
@@ -66,7 +66,7 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="delete_student_from_class.html">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Delete students from class</span>
@@ -74,11 +74,12 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="class_result.html">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>View students</span>
+                    <span>Class's result</span>
                 </a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="class.html">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -126,7 +127,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <!-- get name of user -->
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Chau.TT215182</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username">Chau.TT215182</span>
                             <img class="img-profile rounded-circle"
                                 src="/static/img/undraw_profile.svg">
                         </a>
@@ -137,15 +138,6 @@
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
-                            <!-- <a class="dropdown-item" href="#">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
-                            </a> -->
-                            <!-- <div class="dropdown-divider"></div> -->
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Logout
@@ -162,19 +154,81 @@
                 <div class="card-header py-3">
                     <h1 class="m-0 font-weight-bold text-primary">Class ICT-K66</h1>
                 </div>
-                <div class="col-lg-6">
-                    <form id="testForm">
-                        <h4 class="mb-1 text-gray-800">Delete student from class</h4>
-                        <div class="form-group">
-                            <label for="numQuestions">Student's name:</label>
-                            <input type="text" id="student_name" name="title" class="form-control" minlength="4" required>
+            <div class="container-fluid"> 
+                <div class="row">
+                    <!-- Earnings (Monthly) Card Example -->
+            </div>
+                <!--Display the list of students in the class-->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-primary">Delete student from class</h4>
+                    </div>
+                    <div class="card-body">
+                        <form class="navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0" placeholder="Search for..."
+                                    aria-label="Search" aria-describedby="basic-addon2" id="searchBar">
+                                
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" id="searchButton">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="input-group mt-3">
+                                <label class="mr-2">
+                                    <input type="radio" name="searchOption" value="title" checked>
+                                    Search with name
+                                </label>
+                                <label class="mr-2">
+                                    <input type="radio" name="searchOption" value="id">
+                                    Search with ID
+                                </label>
+                            </div>
+                        </form>
+                        <br>
+                        <div class="outer-wrapper">
+                            <div class="table-wrapper">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="overflow-y: auto">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Student's name</th>
+                                                <th>Student's ID</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dataTableBody">
+                                        </tbody>
+                                    </table>
+                                    <div>
+                                        <button id = "deleteBtn" class="btn btn-danger btn-icon-split">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                            <span class="text">Delete</span>
+                                        </button>
+                                    </div>
+                                    <br>
+                                    <div class="pagination">
+                                        <button id = "firstBtn">
+                                            First page
+                                        </button>
+                                        <button id = "prevBtn">
+                                            Previous page
+                                        </button>
+                                        <button id="nextBtn">
+                                            Next page
+                                        </button>
+                                        <button id = "lastBtn">
+                                            Last page
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="numQuestions">Student's ID:</label>
-                            <input type="number" id="student_id" name="numQuestions" class="form-control" required min="1">
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="DeleteStudent()">Delete student</button>
-                    </form>
+                    </div>
                 </div>
                 <div id="content" class = "grid-container"></div>
             <!-- Footer -->
@@ -188,6 +242,9 @@
             <!-- End of Footer -->
 
         </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
         <!-- End of Content Wrapper -->
 
     </div>
