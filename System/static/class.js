@@ -13,8 +13,11 @@ function generateClassList(Class_list) {
 
             // Create an embedded link within the card
             var linkElement = document.createElement("a");
-            linkElement.href = "class_interface.html" + "?id="
+            linkElement.href = "class_interface.html" + "?id=" + item.id; // Link to the exam page
             linkElement.style = "text-decoration: none; color: black;";
+            linkElement.onclick = function() {
+                localStorage.setItem("class_id", item.id);
+            };
 
             cardBodyElement.innerHTML += `
                 <div class="ml-3">

@@ -442,19 +442,231 @@ GO;
 CREATE PROCEDURE createClass(@teacherId INT, @className VARCHAR(50))
 AS
 BEGIN
+SET NOCOUNT ON
 	IF EXISTS (SELECT * FROM Class WHERE class_name = @className)
 		BEGIN
-			PRINT 'This class name has been used'
-			SELECT 0
+			SELECT 0;
 		END
 	ELSE
 		BEGIN
 			INSERT INTO Class(teacher_id, class_name, number_student)
-            VALUES (@teacherId, @className, 0)
-            SELECT 1
+            VALUES (@teacherId, @className, 0);
+			--COMMIT;
+            SELECT 1;
 		END
 END;
 GO;
 
 --Test create new class
+Select * from Class;
 exec createClass @teacherId = 13, @className = 'class_06';
+GO;
+
+--Delete class
+DROP PROCEDURE deleteClass;
+GO;
+CREATE PROCEDURE deleteClass @class_id INT
+AS
+BEGIN
+SET NOCOUNT ON
+	IF EXISTS (SELECT * FROM Class WHERE class_id=@class_id)
+		BEGIN 
+		DELETE FROM Class WHERE class_id = @class_id;
+		SELECT 1;
+		END;
+	ELSE
+		BEGIN
+		SELECT 0;
+		END;
+END;
+--Test delete class
+Select * From Class;
+EXEC dbo.deleteClass 15;
+GO;
+
+--Get Class info
+--Get Student info in class
+DROP PROC studentInfoClass;
+GO;
+CREATE PROC studentInfoClass @class_id INT
+AS
+BEGIN
+	SELECT 
+        ui.user_id, 
+        ui.username, 
+		MAX(ch.score) AS max_score,
+        AVG(ch.score) AS avg_score,
+		(SELECT COUNT(ch.user_id) FROM Class_history ch WHERE ch.user_id = ui.user_id) AS test_per_std
+    FROM dbo.User_info ui, dbo.Class_history ch, dbo.Class_user cu
+	WHERE cu.class_id = @class_id
+	AND cu.user_id = ui.user_id
+	AND ch.user_id = ui.user_id
+    GROUP BY ui.user_id, ui.username
+END;
+GO;
+--Test get student from class
+EXEC dbo.studentInfoClass 2;
+GO;
+
+--Query number of Test and number of student inside a class
+DROP PROC classInfo;
+GO;
+CREATE PROC classInfo @class_id INT
+AS
+BEGIN
+Select number_student, (SELECT COUNT(test_id) FROM Class_test WHERE class_id=@class_id) FROM Class WHERE class_id=@class_id;
+END;
+GO;
+
+--Test get class info
+EXEC dbo.classInfo 2;
+GO;
+
+
+--Add student to class
+-- ADD STUDENT TO CLASS---
+DROP PROCEDURE addStudentToClass
+GO;
+SET ANSI_NULLS ON
+GO;
+SET QUOTED_IDENTIFIER ON
+GO;
+CREATE PROCEDURE addStudentToClass
+	@classId INT, @studentId INT
+AS
+BEGIN
+SET NOCOUNT ON
+--Check if the student existed
+IF NOT EXISTS (SELECT 1 FROM User_info WHERE user_id = @studentId)
+	BEGIN
+		--PRINT 'This student is not exist'
+		SELECT 0;
+	END;
+ELSE
+	BEGIN
+	--Check if this student was in this class
+	IF NOT EXISTS (SELECT 1 FROM Class_user WHERE class_id = @classId AND user_id = @studentId)
+		BEGIN
+		INSERT INTO Class_user(class_id, user_id) VALUES (@classId, @studentId);
+		INSERT INTO Class_history(class_id, user_id)
+		VALUES (@classId, @studentId);
+		SELECT  1;
+		END;
+	ELSE
+		BEGIN
+		--PRINT 'This student existed in this class';
+		SELECT -1;
+		END;
+    END;
+END;
+
+
+--Test add student to class
+EXEC dbo.addStudentToClass 2, 26;
+--See students in class
+Select * From Class_user;
+GO;
+
+--DELETE STUDENT FROM CLASS
+DROP PROCEDURE deleteStudentFromClass;
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE deleteStudentFromClass @classId INT, @studentId INT
+AS
+BEGIN
+SET NOCOUNT ON
+	--Check if this student was in this class
+	IF NOT EXISTS (SELECT 1 FROM Class_user WHERE class_id = @classId AND user_id = @studentId)
+		BEGIN
+		-- PRINT 'This student is not in this class';
+		SELECT -1;
+		END;
+	ELSE
+		BEGIN
+        DELETE FROM Class_user WHERE class_id = @classId AND user_id = @studentId;
+		SELECT  1;
+		END;
+END;
+GO;
+--Test delete student from class
+EXEC dbo.deleteStudentFromClass 2, 26
+
+-----------------------------------------------
+---TRIGGER UPDATE NUMBER OF STUDENT IN CLASS---
+-----------------------------------------------
+DROP TRIGGER updateNumStudent;
+GO;
+CREATE TRIGGER updateNumStudent ON Class_user FOR INSERT
+AS
+BEGIN
+	UPDATE Class 
+	SET number_student = number_student + 1
+	FROM Class, inserted WHERE Class.class_id = inserted.class_id;
+END
+GO;
+
+--Test trigger
+SELECT * FROM Class where class_id=2;
+Insert into Class_user
+values (2, 21);
+SELECT * FROM Class where class_id=2;
+GO;
+
+----------------------------
+---TRIGGER DELETE STUDENT---
+----------------------------
+CREATE TRIGGER decreaseNumStudent ON Class_user FOR DELETE
+AS
+BEGIN
+	UPDATE Class 
+	SET number_student = number_student - 1
+	FROM Class, deleted WHERE Class.class_id = deleted.class_id
+END
+GO;
+
+----------------------------
+---GET CLASS TEST---
+----------------------------
+DROP PROC getClassTest;
+GO;
+CREATE PROC getClassTest @class_id INT
+AS
+BEGIN
+SELECT t.*, ct.duration FROM Class_test ct, Test t WHERE ct.class_id=@class_id AND ct.test_id=t.test_id;
+END
+GO;
+--Get class test
+EXEC getClassTest 2;
+
+
+
+----------------------------
+---GET STUDENT CLASS---
+----------------------------
+DROP PROC getStudentClass;
+GO;
+CREATE PROC getStudentClass @id INT
+AS
+BEGIN
+SELECT c.*, t.username as teacher FROM Class c, Class_user cu, User_info t WHERE cu.user_id=@id AND c.class_id=cu.class_id AND t.user_id=c.teacher_id;
+END
+GO;
+
+--Test Get Student Class
+EXEC getStudentClass 14;
+
+----------------------------
+---INSERT CLASS HISTORY---
+----------------------------
+DROP PROC insertClassHistory;
+GO;
+CREATE PROC insertClassHistory 
+(@user_id INT, @test_id INT, @class_id INT, @score FLOAT)
+AS
+BEGIN
+INSERT INTO Class_history(class_id, user_id, test_id, score)
+VALUES (@class_id, @user_id, @test_id, @score)
+END

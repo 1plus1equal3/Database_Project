@@ -42,7 +42,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard_admin.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -53,41 +53,35 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="class_interface.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Your class</span></a>
-            </li>
-
             <li class="nav-item active">
-                <a class="nav-link" href="add_student_to_class.html">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Add students to class</span>
-                </a>
+                <a class="nav-link" href="#">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="delete_student_from_class.html">
+                <a class="nav-link" href="http://localhost:5000/history.html">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>Delete students from class</span>
+                    <span>My Tests</span>
                 </a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="class_test.html">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Class's test</span>
-                </a>
-            </li>
-
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="class.html">
+                <a class="nav-link" href="http://localhost:5000/dashboard_user_search.html">
                     <i class="fas fa-fw fa-wrench"></i>
-                    <span>Return</span>
+                    <span>Search Tests</span>
                 </a>
             </li>
+
+            <!-- Divider -->
+            <li class="nav-item">
+                <a class="nav-link" href="student_class.html">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>My Class</span>
+                </a>
+            </li>
+
         </ul>
         <!-- End of Sidebar -->
 
@@ -99,6 +93,22 @@
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
+
+                <!-- Topbar Search -->
+                <!-- <form
+                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form> -->
+
+                <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
 
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
@@ -124,19 +134,20 @@
                             </form>
                         </div>
                     </li>
+
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <!-- get name of user -->
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username">Chau.TT215182</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username"></span>
                             <img class="img-profile rounded-circle"
                                 src="/static/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="profile_admin.html">
+                            <a class="dropdown-item" href="http://localhost:5000/profile.html">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
@@ -160,28 +171,9 @@
 
             </nav>
             <!-- Main Content -->
-            
+            <div id="content" class = "grid-container"></div>
             <!-- End of Main Content -->
-                <!-- DataTales Example -->
-                <div class="card-header py-3">
-                    <h1 class="m-0 font-weight-bold text-primary">Class ICT-K66</h1>
-                </div>
-                <div class="col-lg-6">
-                    <form id="testForm">
-                        <h4 class="mb-1 text-gray-800">Add student to class</h4>
-                        <!-- <div class="form-group">
-                            <label for="numQuestions">Student's name:</label>
-                            <input type="text" id="student_name" name="title" class="form-control" minlength="4" required>
-                        </div> -->
-                        <div class="form-group">
-                            <label for="numQuestions">Student's ID:</label>
-                            <input type="text" id="student_id" class="form-control" required min="1">
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="AddStudent()">Add student</button>
-                    </form>
-                </div>
-            
-                <div id="content" class = "grid-container"></div>    
+
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -217,7 +209,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="http://localhost:5000/">Logout</a>
                 </div>
             </div>
         </div>
@@ -233,7 +225,8 @@
     <!-- Custom scripts for all pages-->
     <script src="/static/js/sb-admin-2.min.js"></script>
     <!-- <script src="dashboard_dynamic.js"></script> -->
-    <script src="/static/add_student_to_class.js"></script>
+    <script src="/static/user_class.js"></script>
+    <script>window.onload = loadQuestion;</script>
 </body>
 
 </html>

@@ -10,6 +10,16 @@ CREATE TABLE User_info(
 );
 EXEC sp_columns User_info;
 SELECT * FROM User_info;
+INSERT INTO User_info(username, user_password, email, user_type)
+VALUES 
+('user05', 'uwxz', 'user@gmail.com', 0),
+('user06', 'uwxz', 'user@gmail.com', 0),
+('user07', 'uwxz', 'user@gmail.com', 0),
+('user08', 'uwxz', 'user@gmail.com', 0),
+('user09', 'uwxz', 'user@gmail.com', 0),
+('user10', 'uwxz', 'user@gmail.com', 0),
+('user11', 'uwxz', 'user@gmail.com', 0),
+('user12', 'uwxz', 'user@gmail.com', 0);
 
 --Question table
 DROP TABLE Question;
@@ -84,7 +94,10 @@ CREATE TABLE History(
 EXEC sp_columns History;
 Select * FROM History;
 
---Class table
+--------------------------------------------------------
+----------------- Class table --------------------------
+--------------------------------------------------------
+
 DROP TABLE Class;
 CREATE TABLE Class(
   class_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -95,6 +108,7 @@ CREATE TABLE Class(
 );
 EXEC sp_columns Class;
 Select * FROM Class;
+Update Class Set number_student=7 where class_id=2;
 
 --Add test data
 INSERT INTO Class(teacher_id, class_name) VALUES
@@ -104,16 +118,63 @@ INSERT INTO Class(teacher_id, class_name) VALUES
 (13, 'class_04'),
 (13, 'class_05');
 
+DROP TABLE Class_user;
 CREATE TABLE Class_user(
   class_id INT,
   user_id INT,
-  FOREIGN KEY(class_id) REFERENCES Class(class_id),
-  FOREIGN KEY(user_id) REFERENCES User_info(user_id)
-)
+  FOREIGN KEY(class_id) REFERENCES Class(class_id) ON DELETE CASCADE,
+  FOREIGN KEY(user_id) REFERENCES User_info(user_id) ON DELETE CASCADE,
+  PRIMARY KEY(class_id, user_id)
+);
+EXEC sp_columns Class_user;
+SELECT * FROM Class_user;
 
+DROP TABLE Class_test;
 CREATE TABLE Class_test(
   class_id INT,
   test_id INT,
-  FOREIGN KEY(class_id) REFERENCES Class(class_id),
-  FOREIGN KEY(test_id) REFERENCES Test(test_id)
+  duration INT,
+  addTime date NOT NULL DEFAULT GETDATE()
+  FOREIGN KEY(class_id) REFERENCES Class(class_id) ON DELETE CASCADE,
+  FOREIGN KEY(test_id) REFERENCES Test(test_id) ON DELETE CASCADE
 )
+EXEC sp_columns Class_test;
+SELECT * FROM Class_test;
+INSERT INTO Class_test(class_id, test_id, duration)
+VALUES 
+(2, 100, 90),
+(2, 101, 90),
+(2, 102, 90),
+(2, 103, 90),
+(2, 104, 90);
+
+
+DROP table Class_history;
+create table Class_history(
+class_id int,
+user_id int,
+test_id int,
+finish_time date NOT NULL DEFAULT GETDATE(),
+score float,
+FOREIGN KEY(test_id) REFERENCES Test(test_id) ON DELETE CASCADE,
+FOREIGN KEY(class_id, user_id) REFERENCES Class_user(class_id, user_id) ON DELETE CASCADE
+)
+EXEC sp_columns Class_history;
+SELECT * FROM Class_history;
+
+INSERT INTO Class_history(class_id, user_id, test_id, score)
+VALUES 
+(2, 14, 100, 8.9),
+(2, 14, 101, 8.9),
+(2, 15, 102, 8.9),
+(2, 15, 103, 8.9),
+(2, 16, 104, 8.9),
+(2, 17, 101, 8.9),
+(2, 17, 100, 8.9),
+(2, 18, 103, 8.9),
+(2, 18, 104, 8.9),
+(2, 19, 100, 8.9),
+(2, 19, 105, 8.9),
+(2, 20, 100, 8.9);
+
+SELECT COUNT(user_id) FROM Class_history WHERE user_id=14;

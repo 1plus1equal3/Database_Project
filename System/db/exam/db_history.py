@@ -3,7 +3,14 @@ from ..db_connection import conn
 # Insert score into database
 def db_new_history(user_id, test_id, score):
     cursor = conn.cursor()
-    query = f"EXEC insertHistory @user_id = {user_id}, @test_id = {test_id}, @score = {score};"
+    query = f"EXEC dbo.insertHistory @user_id = {user_id}, @test_id = {test_id}, @score = {score};"
+    cursor.execute(query)
+    conn.commit()
+    return True
+
+def db_new_class_history(user_id, test_id, class_id, score):
+    cursor = conn.cursor()
+    query = f"EXEC dbo.insertClassHistory @user_id = {user_id}, @test_id = {test_id}, @class_id = {class_id}, @score = {score};"
     cursor.execute(query)
     conn.commit()
     return True

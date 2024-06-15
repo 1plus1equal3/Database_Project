@@ -28,6 +28,60 @@
             padding-top: 20px; /* Adjust the padding-top value as needed */
         }
     </style>
+    <script>
+        function showPopup() {
+            swal({
+                title: "Create a new class",
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Enter class name",
+                        type: "text",
+                        id: "class_name"
+                    },
+                },
+                icon: "info",
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "cancel",
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "Confirm",
+                        value: true,
+                        visible: true,
+                        className: "confirm",
+                        closeModal: true
+                    }
+                    },
+                })
+                .then((value) => {
+                    if (value!=null){
+                        const response = fetch('http://localhost:5000/create_class', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                class_name: value,
+                                user_id: localStorage.getItem('user_id')
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(response => {
+                        console.log(response);
+                        if (response.success) {
+                            swal("Class created", "You can now enter the new class", "success");
+                            window.location.reload();
+                        } else swal("Cannot create class", "Please try again", "error");
+                })
+            }
+            }) 
+            }
+    </script>
 
     <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
 
@@ -54,43 +108,50 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="class_interface.html">
+                <a class="nav-link" href="class.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Your class</span></a>
+                    <span>Dashboard</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="add_student_to_class.html">
+                <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>Add students to class</span>
+                    <span>My Tests</span>
                 </a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="delete_student_from_class.html">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Delete students from class</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="class_test.html">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Class's test</span>
-                </a>
-            </li>
-
             <!-- Divider -->
             <!-- <hr class="sidebar-divider my-0"> -->
 
+            <!-- Heading -->
+            <!-- <div class="sidebar-heading">
+                Interface
+            </div> -->
 
-            <!-- Nav Item - Utilities Collapse Menu -->
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="class.html">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>My class</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <!-- <h6 class="collapse-header">Custom Components:</h6> -->
+                        <a class="collapse-item" href="class.html">My class</a>
+                        <a class="collapse-item">Create class</a>
+                        <a class="collapse-item" href="delete_class_selection.html">Delete class</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard_admin.html">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Return</span>
                 </a>
             </li>
+            <!-- Divider -->
+            <!-- <hr class="sidebar-divider my-0"> -->
         </ul>
         <!-- End of Sidebar -->
 
@@ -132,14 +193,14 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <!-- get name of user -->
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username">Chau.TT215182</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="username"></span>
                             <img class="img-profile rounded-circle"
                                 src="/static/img/undraw_profile.svg">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="profile_admin.html">
+                            <a class="dropdown-item" href="#">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
@@ -162,85 +223,11 @@
             <div class="container-fluid"> 
                 <div class="row">
                     <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Number of students</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="std_num">45</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <a class="nav-link" href="test_list.html">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Number of tests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800" id = "test_num">10</div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                                        </div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm mr-2">
-                                                    <div class="progress-bar bg-info" role="progressbar"
-                                                        style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                        aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pending Requests Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Pending Requests</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
             </div>
                 <!--Display the list of students in the class-->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h4 class="m-0 font-weight-bold text-primary">Class's students</h4>
+                        <h4 class="m-0 font-weight-bold text-primary">Delete existing classes</h4>
                     </div>
                     <div class="card-body">
                         <form class="navbar-search">
@@ -254,7 +241,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="input-group mt-3">
+                            <!-- <div class="input-group mt-3">
                                 <label class="mr-2">
                                     <input type="radio" name="searchOption" value="title" checked>
                                     Search with name
@@ -263,7 +250,7 @@
                                     <input type="radio" name="searchOption" value="id">
                                     Search with ID
                                 </label>
-                            </div>
+                            </div> -->
                         </form>
                         <br>
                         <div class="outer-wrapper">
@@ -273,22 +260,35 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Student's name</th>
-                                                <th>Student's ID</th>
-                                                <th>Best result</th>
-                                                <th>Average result</th>
-                                                <th>Number of test taken</th>
+                                                <th>Class's name</th>
+                                                <th>Class's ID</th>
+                                                <th>Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody id="dataTableBody">
                                         </tbody>
                                     </table>
+                                    <div>
+                                        <button id = "deleteBtn" class="btn btn-danger btn-icon-split">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                            <span class="text">Delete</span>
+                                        </button>
+                                    </div>
+                                    <br>
                                     <div class="pagination">
+                                        <button id = "firstBtn">
+                                            First page
+                                        </button>
                                         <button id = "prevBtn">
                                             Previous page
                                         </button>
                                         <button id="nextBtn">
                                             Next page
+                                        </button>
+                                        <button id = "lastBtn">
+                                            Last page
                                         </button>
                                     </div>
                                 </div>
@@ -308,6 +308,9 @@
             <!-- End of Footer -->
 
         </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
         <!-- End of Content Wrapper -->
 
     </div>
@@ -348,7 +351,7 @@
     <!-- Custom scripts for all pages-->
     <script src="/static/js/sb-admin-2.min.js"></script>
     <!-- <script src="dashboard_dynamic.js"></script> -->
-    <script src="/static/class_interface.js"></script>
+    <script src="/static/delete_class_selection.js"></script>
 </body>
 
 </html>

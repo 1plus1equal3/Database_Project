@@ -49,8 +49,8 @@
                     },
                 })
                 .then((value) => {
-                    if (value!=null)
-                        return fetch('http://localhost:5000/create_class', {
+                    if (value!=null){
+                        const response = fetch('http://localhost:5000/create_class', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -59,14 +59,17 @@
                                 class_name: value,
                                 user_id: localStorage.getItem('user_id')
                             })
-                        });
+                        })
+                        .then(response => response.json())
+                        .then(response => {
+                        console.log(response);
+                        if (response.success) {
+                            swal("Class created", "You can now enter the new class", "success");
+                            window.location.reload();
+                        } else swal("Cannot create class", "Please try again", "error");
                 })
-                .then(response => {
-                    if (response.success) {
-                        swal("Class created", "You can now enter the new class", "success");
-                        window.location.reload();
-                    } else swal("Cannot create class", "Please try again", "error");
-                });
+            }
+            }) 
             }
     </script>
     <!-- Custom styles for this template-->

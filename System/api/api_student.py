@@ -2,6 +2,7 @@ from flask import jsonify
 import matplotlib.pyplot as plt
 import numpy as np
 from db.exam import *
+from db.classes import *
 
 ### Student APIS ###
 def requestExam():
@@ -30,6 +31,30 @@ def evaluate_exam(answer):
 
     # Insert score into database
     status = db_history.db_new_history(user_id, test_id, point)
+    if status:
+        return jsonify({'success': status,'submit_state': 'success', 'score': point})
+    else:
+        return jsonify({'success': status,'submit_state': 'fail'})
+    
+def evaluate_class_exam(test_id, class_id, answer):
+    # print(answer.get('selectedOptions')[0])
+    # print(answer.get('user_id'))
+    user_id = answer.get('user_id')
+    test_id = answer.get('test_id')
+    question_num = answer.get('num_of_questions')
+    selectedOptions = answer.get('selectedOptions')
+    # Get number of correct answers
+    point = 0
+    for ans in selectedOptions:
+        correct_answer = db_exam.db_question_answer(ans.get('question_id'))
+        if ans.get('answer') == ord(correct_answer) - ord('a'):
+            point += 1
+    # Calculate score
+    point = round(point / question_num * 10, 2)
+
+    # Insert score into database
+    status = db_history.db_new_history(user_id, test_id, point)
+    status = db_history.db_new_class_history(user_id, test_id, class_id, point)
     if status:
         return jsonify({'success': status,'submit_state': 'success', 'score': point})
     else:
@@ -97,3 +122,8 @@ def statistic(user_id):
            'max': max_value,
            'min': min_value}
     return jsonify(msg)
+
+
+def getStudentClass(id):
+    class_list = db_class.db_get_student_classes(id)
+    return jsonify(class_list)

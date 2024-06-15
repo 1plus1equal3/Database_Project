@@ -32,9 +32,25 @@ def create_test(test_info):
 
 #! Class APIs
 def getClassFromDB(teacher_id):
-    class_list = db_class.db_get_class(teacher_id)
+    class_list = db_class.db_get_classes(teacher_id)
     return jsonify(class_list)
 
 def createNewClass(info):
     return db_class.db_create_class(info)
+
+def deleteClass(class_id):
+    return db_class.db_delete_class(class_id)
+
+#! Class specific APIs
+def getClassInfo(classId):
+    return db_class.db_get_class_info(classId)
+
+def addStudentToClass(class_id, student_id):
+    return db_class.db_add_student_to_class(student_id, class_id)
+
+def deleteStudentFromClass(class_id, student_id):
+    return db_class.db_delete_student_from_class(student_id, class_id)
+
+def getClassTest(class_id):
+    return db_class.db_get_class_test(class_id)
     

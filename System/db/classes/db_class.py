@@ -1,4 +1,24 @@
 from ..db_connection import conn
+import numpy as np
+
+# Get student classes
+def db_get_student_classes(student_id):
+    query = 'EXEC dbo.getStudentClass @Id = ?'
+    cursor = conn.cursor()
+    cursor.execute(query, student_id)
+    data = cursor.fetchall()
+    #Structure data
+    classList = []
+    for i in data:
+        class_data = {
+            'id': i[0],
+            'title': i[2],
+            'std_num': i[3],
+            'create_date': i[4],
+            'teacher': i[5]
+        }
+        classList.append(class_data)
+    return classList
 
 # Get classes created by a teacher
 def db_get_classes(teacher_id):
@@ -10,6 +30,7 @@ def db_get_classes(teacher_id):
     classList = []
     for i in data:
         class_data = {
+            'id': i[0], # 'class_id' is the key to be used in the frontend, 'i[0]' is the value from the database
             'title': i[2],
             'std_num': i[3],
             'date': i[4]
@@ -27,10 +48,21 @@ def db_create_class(info):
     cursor.execute(query, teacher_id, class_name)
     response = cursor.fetchone()
     conn.commit()
-    if response[0] == 0:
+    if int(response[0]) == 0:
         return {'success': False, 'message': 'Class already exists!'}
     else:
         return {'success': True, 'message': 'Class created successfully!'}
+    
+def db_delete_class(class_id):
+    query = 'EXEC dbo.deleteClass @class_id = ?'
+    cursor = conn.cursor()
+    cursor.execute(query, class_id)
+    response = cursor.fetchone()
+    conn.commit()
+    if int(response[0]) == 0:
+        return {'success': False, 'message': 'Class' + str(class_id) + 'does not exist!'}
+    else:
+        return {'success': True, 'message': 'Class' + str(class_id) + ' deleted successfully!'}
 
 # def getClassFromDB(teacher_id):
 #     # Query database for data
@@ -64,31 +96,28 @@ def db_create_class(info):
 #     else:
 #         return {'success': True, 'message': 'Class created successfully!'}
 
-def get_class_info(teacherID, classID):
+def db_get_class_info(classID):
     cursor = conn.cursor()
-    # Execute the stored procedure
-    query = 'EXEC dbo.GetClassInfo @teacherId = ?, @classId = ?'
-    cursor.execute(query, teacherID, classID)
-    
-    # Fetch the first result set (summary)
+    # Get student_number and test_number
+    query = 'EXEC dbo.classInfo @class_id = ?'
+    cursor.execute(query, classID)
     summary = cursor.fetchone()
-    if summary is None:
-        return "This class does not exist or does not belong to the specified teacher"
-    
     number_of_students = summary[0]
     number_of_tests = summary[1]
     
-    # Move to the next result set and fetch the student information
-    cursor.nextset()
+    # Get student list
+    query = 'EXEC dbo.studentInfoClass @class_id = ?'
+    cursor.execute(query, classID)
     students = cursor.fetchall()
-    
     # Format the results
     student_list = []
     for student in students:
         student_info = {
             'user_id': student.user_id,
             'username': student.username,
-            'avg_score': student.avg_score
+            'max_score': student.max_score,
+            'avg_score': student.avg_score,
+            'test_num': student.test_per_std,
         }
         student_list.append(student_info)
     
@@ -98,7 +127,7 @@ def get_class_info(teacherID, classID):
         'students': student_list
     }
     
-def view_test_results(studentID, testID, classID):
+def db_view_test_results(studentID, testID, classID):
     cursor = conn.cursor()
     # Execute the stored procedure
     query = 'EXEC dbo.GetTestResults @userID = ?, @testID = ?, @classID = ?'
@@ -115,29 +144,29 @@ def view_test_results(studentID, testID, classID):
         
     return result_list
 
-def add_student_to_class(studentID, classID):
+def db_add_student_to_class(studentID, classID):
     # Prepare the query with the output parameter
-    query = '''
-    EXEC addStudentToClass @classId = ?, @studentId = ?
+    query = f'''
+    EXEC dbo.addStudentToClass @classId = {classID}, @studentId = {studentID}
     '''
     # Fetch the result
     #vcursor.execute(query, classID, studentID)
     cursor = conn.cursor()
-    cursor.execute(query, classID, studentID)
+    cursor.execute(query)
     result = cursor.fetchone()
     conn.commit()
-    # print(result[0])
     
-    # Print the result
     if result[0] == -1:
-        print("Operation failed: This student does not exist, or the class does not exist, or the student is already in the class.")
-    elif result[0] == 1:
-        print("Student added successfully")
+        return {'success': False, 'message': 'The student is already in the class.'}
+    elif result[0] == 0:
+        return {'success': False, 'message': 'This student does not exist'}
+    else:
+        return {'success': True, 'message': 'Student added to class successfully'}
 
-def delete_student_from_class(studentID, classID):
+def db_delete_student_from_class(studentID, classID):
     # Prepare the query with the output parameter
     query = '''
-    EXEC deleteStudentFromClass @classId = ?, @studentId = ?
+    EXEC dbo.deleteStudentFromClass @classId = ?, @studentId = ?
     '''
     # Fetch the result
     cursor = conn.cursor()
@@ -146,25 +175,25 @@ def delete_student_from_class(studentID, classID):
     conn.commit()
     #Print the result
     if result[0] == -1:
-        print("Operation failed: This student does not exist, or the class does not exist, or the student is not in the class.")
+        return {'success': False, 'message': 'The student is not in the class.'}
     elif result[0] == 1:
-        print("Student deleted from class successfully")
-
-def add_student_to_class(studentID, classID):
-    # Prepare the query with the output parameter
-    query = '''
-    EXEC addStudentToClass @classId = ?, @studentId = ?
-    '''
-    # Fetch the result
-    #vcursor.execute(query, classID, studentID)
-    cursor = conn.cursor()
-    cursor.execute(query, classID, studentID)
-    result = cursor.fetchone()
-    conn.commit()
-    # print(result[0])
+        return {'success': True, 'message': 'Student removed from class successfully'}
     
-    # Print the result
-    if result[0] == -1:
-        print("Operation failed: This student does not exist, or the class does not exist, or the student is already in the class.")
-    elif result[0] == 1:
-        print("Student added successfully")
+def db_get_class_test(classID):
+        cursor = conn.cursor()
+        # Get student_number and test_number
+        query = 'EXEC dbo.getClassTest @class_id = ?'
+        cursor.execute(query, classID)
+        tests = cursor.fetchall()
+        # Format the results
+        test_list = []
+        for test in tests:
+            test_info = {
+                'test_id': test.test_id,
+                'title': test.title,
+                'subject': test.subject,
+                'level': test.difficulty_level,
+                'duration': test.duration
+            }
+            test_list.append(test_info)
+        return test_list

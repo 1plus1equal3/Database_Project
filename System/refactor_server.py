@@ -94,13 +94,17 @@ def statistic_piechart():
 def statistic_barchart():
     return send_from_directory('static', 'statistic_images/statistic_barchart.png')
 
+@app.route('/user_class.html')
+def user_class_html():
+    return render_template('user_class.html')
+
 @app.route('/class.html')
 def class_html():
     return render_template('class.html')
 
 @app.route('/delete_class.html')
 def delete_class_html():
-    return render_template('delete_class.html')
+    return render_template('delete_class_selection.html')
 
 @app.route('/class_interface.html')
 def class_interface_html():
@@ -114,9 +118,9 @@ def add_student_to_class_html():
 def delete_student_from_class_html():
     return render_template('delete_student_from_class.html')
 
-@app.route('/class_result.html')
-def class_result_html():
-    return render_template('class_result.html')
+@app.route('/class_test.html')
+def class_test_html():
+    return render_template('class_test.html')
 
 # API endpoints
 @app.route('/register', methods=['POST'])
@@ -185,6 +189,14 @@ def test_interface():
     result = api_student.evaluate_exam(answer)
     return result
 
+@app.route('/submit_class_test', methods = ['POST'])
+def submit_class_test():
+    test_id = request.args.get('test_id')
+    class_id = request.args.get('class_id')
+    answer = request.get_json()
+    result = api_student.evaluate_class_exam(test_id, class_id, answer)
+    return result
+
 @app.route('/history', methods=['GET'])
 def history():
     user_id = request.args.get('user_id')
@@ -226,6 +238,12 @@ def statistic_html():
     msg = api_student.statistic(user_id)
     return msg
 
+@app.route('/student_class', methods=['GET'])
+def get_student_class():
+    student_id = request.args.get('id')
+    classes = api_student.getStudentClass(student_id)
+    return classes
+
 @app.route('/request_class', methods=['GET'])
 def request_class():
     teacher_id = request.args.get('id')
@@ -236,7 +254,50 @@ def request_class():
 def create_new_class():
     class_info = request.get_json()
     response = api_teacher.createNewClass(class_info)
+    print(response)
     return response
+
+@app.route('/delete_class', methods=['POST'])
+def delete_class():
+    class_ids = request.get_json()['class_ids']
+    for class_id in class_ids:
+        # print(class_id)
+        result = api_teacher.deleteClass(class_id)
+    return {'success': True, 'message': 'Class deleted successfully!'}
+
+@app.route('/get_class_info', methods=['GET'])
+def class_info():
+    class_id = request.args.get('c_id')
+    class_info = api_teacher.getClassInfo(class_id)
+    return class_info
+
+@app.route('/add_student_to_class', methods=['POST'])
+def add_student_to_class():
+    class_id = request.get_json()['class_id']
+    student_ids = request.get_json()['student_ids']
+    for student_id in student_ids:
+        response = api_teacher.addStudentToClass(class_id, student_id)
+        if response['success'] == False:
+            print(f'Error adding student {student_id} to class')
+        print(response['message'])
+    return {'success': True, 'message': 'Class deleted successfully!'}
+
+@app.route('/delete_student_from_class', methods=['POST'])
+def delete_student_from_class():
+    class_id = request.get_json()['class_id']
+    student_ids = request.get_json()['student_ids']
+    for student_id in student_ids:
+        response = api_teacher.deleteStudentFromClass(class_id, student_id)
+        if response['success'] == False:
+            print(f'Error deleting student {student_id} from class')
+        print(response['message'])
+    return {'success': True, 'message': 'Class deleted successfully!'}
+
+@app.route('/get_class_test', methods=['GET'])
+def get_class_test():
+    class_id = request.args.get('id')
+    test_list = api_teacher.getClassTest(class_id)
+    return test_list
 
 
 # Start server

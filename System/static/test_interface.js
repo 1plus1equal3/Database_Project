@@ -72,7 +72,7 @@ function generateQuestionList(questions) {
         <span class="text">Submit Test</span>
    `;
      finalSubmitButton.addEventListener('click', function() {
-    //     //testAssessment();
+         //testAssessment();
            console.log(selectedOptions)
            console.log(user_id)
            submitAnswer();
@@ -129,6 +129,8 @@ function loadQuestion() {
  
  
 function submitAnswer(){
+    var id = window.location.search.split("=")[2];
+    if(id == null){
     fetch('http://localhost:5000/submit_test', {
           method: 'POST',
           headers: {
@@ -151,7 +153,30 @@ function submitAnswer(){
           .catch((error) => {
               console.error('Error:', error);
           });
+    }else{
+          fetch('http://localhost:5000/submit_class_test?test_id='+test_id+'&class_id=' + id, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(obj),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Submit successfully');
+                console.log('Submit state: ' + data.submit_state);
+                console.log('Point: ' + data.score + '/' + num_of_questions);
+                window.location = 'student_class.html'
+            } else {
+                alert('Submit fail');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
          
+}
 }
  
  
