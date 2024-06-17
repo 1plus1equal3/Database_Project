@@ -670,3 +670,74 @@ BEGIN
 INSERT INTO Class_history(class_id, user_id, test_id, score)
 VALUES (@class_id, @user_id, @test_id, @score)
 END
+GO;
+
+----------------------------
+---Add Test to Class---
+----------------------------
+DROP PROC addTestToClass;
+GO;
+CREATE PROC addTestToClass @classId INT, @testId INT, @duration INT
+AS
+BEGIN
+SET NOCOUNT ON
+--Check if the test existed
+IF NOT EXISTS (SELECT 1 FROM Test WHERE test_id = @testId)
+	BEGIN
+		--PRINT 'This test is not exist'
+		SELECT 0;
+	END;
+ELSE
+	BEGIN
+	--Check if this test was in this class
+	IF NOT EXISTS (SELECT 1 FROM Class_test WHERE class_id = @classId AND test_id = @testId)
+		BEGIN
+		INSERT INTO Class_test(class_id, test_id, duration) VALUES (@classId, @testId, @duration);
+		SELECT  1;
+		END;
+	ELSE
+		BEGIN
+		--PRINT 'This test existed in this class';
+		SELECT -1;
+		END;
+    END;
+END
+
+--Test add test
+EXEC dbo.addTestToClass 2, 42, 120;
+SELECT * FROM Class_test;
+GO;
+----------------------------
+---Delete Test From Class---
+----------------------------
+DROP PROC deleteTestFromClass;
+GO;
+CREATE PROC deleteTestFromClass @classId INT, @testId INT
+AS
+BEGIN
+SET NOCOUNT ON
+--Check if the test existed
+IF NOT EXISTS (SELECT 1 FROM Test WHERE test_id = @testId)
+	BEGIN
+		--PRINT 'This test is not exist'
+		SELECT 0;
+	END;
+ELSE
+	BEGIN
+	--Check if this test was in this class
+	IF NOT EXISTS (SELECT 1 FROM Class_test WHERE class_id = @classId AND test_id = @testId)
+		BEGIN
+		SELECT  -1;
+		END;
+	ELSE
+		BEGIN
+		--PRINT 'This test existed in this class';
+		DELETE FROM Class_test WHERE class_id=@classId AND test_id=@testId;
+		SELECT 1;
+		END;
+    END;
+END
+
+--Test add test
+EXEC dbo.deleteTestFromClass 2, 42;
+SELECT * FROM Class_test;

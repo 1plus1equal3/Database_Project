@@ -30,6 +30,84 @@
     </style>
 
     <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        async function showPopup() {
+            const { value: formValues } = await Swal.fire({
+            title: "Add test to class",
+            html: `
+                <label for="swal-input1">Test ID</label>
+                <input id="swal-input1" class="swal2-input">
+                <label for="swal-input2">Duration</label>
+                <input id="swal-input2" class="swal2-input">
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                document.getElementById("swal-input1").value,
+                document.getElementById("swal-input2").value
+                ];
+            }
+            })
+            if (formValues) {
+                fetch("/add_test_to_class", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        test_id: formValues[0],
+                        duration: formValues[1],
+                        class_id: localStorage.getItem("class_id")
+                    }),
+                })
+                .then((response) => response.json())
+                .then((response) => {
+                    if (response.success) {
+                        console.log(response)
+                        alert('Test added to class successfully!')
+                        window.location.reload();
+                    }
+                    throw new Error("Failed to add test to class");
+                })
+    }}
+
+    async function deleteTest(){
+        const { value: formValues } = await Swal.fire({
+            title: "Delete test from class",
+            html: `
+                <label for="swal-input1">Test ID</label>
+                <input id="swal-input1" class="swal2-input">
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                document.getElementById("swal-input1").value,
+                ];
+            }
+            })
+            if (formValues) {
+                fetch("/delete_test_from_class", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        test_id: formValues[0],
+                        class_id: localStorage.getItem("class_id")
+                    }),
+                })
+                .then((response) => response.json())
+                .then((response) => {
+                    if (response.success) {
+                        console.log(response)
+                        alert('Test deleted from class successfully!')
+                        window.location.reload();
+                    }
+                    throw new Error("Failed to delete test to class");
+                })
+    }}
+    </script>
 
 </head>
 
@@ -74,10 +152,19 @@
             </li>
 
             <li class="nav-item active">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Class's test</span>
+                <a class="nav-link collapsed" href="class_test.html" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Class's Test</span>
                 </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <!-- <h6 class="collapse-header">Custom Components:</h6> -->
+                        <a class="collapse-item" href="class_test.html">Class's Test</a>
+                        <a class="collapse-item" onclick="showPopup()">Add test</a>
+                        <a class="collapse-item" onclick="deleteTest()">Delete test</a>
+                    </div>
+                </div>
             </li>
 
 
