@@ -197,3 +197,37 @@ def db_get_class_test(classID):
             }
             test_list.append(test_info)
         return test_list
+
+def db_add_test_to_class(testID, classID, duration):
+    # Prepare the query with the output parameter
+    query = f'''
+    EXEC dbo.addTestToClass @classId = {classID}, @testId = {testID}, @duration = {duration}
+    '''
+    # Fetch the result
+    cursor = conn.cursor()
+    cursor.execute(query)
+    result = cursor.fetchone()
+    conn.commit()
+    
+    if result[0] == -1:
+        return {'success': False, 'message': 'The test is already in the class.'}
+    elif result[0] == 0:
+        return {'success': False, 'message': 'This test does not exist'}
+    else:
+        return {'success': True, 'message': 'Test added to class successfully'}
+    
+def db_delete_test_from_class(testID, classID):
+    # Prepare the query with the output parameter
+    query = '''
+    EXEC dbo.deleteTestFromClass @classId = ?, @testId = ?
+    '''
+    # Fetch the result
+    cursor = conn.cursor()
+    cursor.execute(query, classID, testID)
+    result = cursor.fetchone()
+    conn.commit()
+    #Print the result
+    if result[0] == -1:
+        return {'success': False, 'message': 'The test is not in the class.'}
+    elif result[0] == 1:
+        return {'success': True, 'message': 'Test removed from class successfully'}

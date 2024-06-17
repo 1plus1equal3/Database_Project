@@ -275,22 +275,30 @@ def class_info():
 def add_student_to_class():
     class_id = request.get_json()['class_id']
     student_ids = request.get_json()['student_ids']
+    error = []
     for student_id in student_ids:
         response = api_teacher.addStudentToClass(class_id, student_id)
         if response['success'] == False:
             print(f'Error adding student {student_id} to class')
+            error.append(student_id)
         print(response['message'])
+    if len(error) > 0:
+        return {'success': False, 'message': 'Error adding students to class', 'error': error}
     return {'success': True, 'message': 'Class deleted successfully!'}
 
 @app.route('/delete_student_from_class', methods=['POST'])
 def delete_student_from_class():
     class_id = request.get_json()['class_id']
     student_ids = request.get_json()['student_ids']
+    error = []
     for student_id in student_ids:
         response = api_teacher.deleteStudentFromClass(class_id, student_id)
         if response['success'] == False:
             print(f'Error deleting student {student_id} from class')
+            error.append(student_id)
         print(response['message'])
+    if len(error) > 0:
+        return {'success': False, 'message': 'Error deleting students from class', 'error': error}
     return {'success': True, 'message': 'Class deleted successfully!'}
 
 @app.route('/get_class_test', methods=['GET'])
@@ -299,6 +307,20 @@ def get_class_test():
     test_list = api_teacher.getClassTest(class_id)
     return test_list
 
+@app.route('/add_test_to_class', methods=['POST'])
+def add_test_to_class():
+    class_id = request.get_json()['class_id']
+    test_id = request.get_json()['test_id']
+    duration = request.get_json()['duration']
+    response = api_teacher.addTestToClass(class_id, test_id, duration)
+    return response
+
+@app.route('/delete_test_from_class', methods=['POST'])
+def delete_test_from_class():
+    class_id = request.get_json()['class_id']
+    test_id = request.get_json()['test_id']
+    response = api_teacher.deleteTestFromClass(class_id, test_id)
+    return response
 
 # Start server
 if __name__ == '__main__':
