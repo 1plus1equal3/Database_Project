@@ -14,9 +14,10 @@ function AddTable(student_list) {
         if (index >= itemPerPage * currentPage && index < itemPerPage * (currentPage + 1)) {
             if(student.max_score == null) test_num = 0;
             else test_num = student.test_num;
-            if(student.max_score != null) student.max_score = student.max_score.toFixed(1);
-            if(student.avg_score != null) student.avg_score = student.avg_score.toFixed(1);
-            var newRow = AddRow(index + 1, student.username, student.user_id, student.max_score, student.avg_score, test_num);
+            if(student.max_score != null) student.max_score = student.max_score;
+            var avg_score = student.avg_score;
+            if(avg_score != null) avg_score = Number(avg_score).toFixed(1);
+            var newRow = AddRow(index + 1, student.username, student.user_id, student.max_score, avg_score, test_num);
             tableBody.appendChild(newRow);
         }
     });

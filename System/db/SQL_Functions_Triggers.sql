@@ -741,3 +741,45 @@ END
 --Test add test
 EXEC dbo.deleteTestFromClass 2, 42;
 SELECT * FROM Class_test;
+GO;
+
+
+-- GET TEST RESULTS
+CREATE PROCEDURE GetTestResults
+    @userID INT = NULL,
+    @testID INT = NULL,
+    @classID INT
+AS
+BEGIN
+    -- Scenario 1: Both userID and testID are provided
+    IF @userID IS NOT NULL AND @testID IS NOT NULL
+    BEGIN
+        SELECT u.username, ch.user_id, ch.test_id, ch.score, ch.finish_time
+        FROM dbo.Class_history ch, User_info u
+        WHERE ch.user_id = @userID AND ch.test_id = @testID AND ch.class_id = @classID AND u.user_id=ch.user_id;
+    END
+    -- Scenario 2: Only userID is provided
+    ELSE IF @userID IS NOT NULL AND @testID IS NULL
+    BEGIN
+        SELECT u.username, ch.user_id, ch.test_id, ch.score, ch.finish_time
+        FROM dbo.Class_history ch, User_info u
+        WHERE ch.user_id = @userID AND ch.class_id = @classID AND u.user_id=ch.user_id;
+    END
+    -- Scenario 3: Only testID is provided
+    ELSE IF @userID IS NULL AND @testID IS NOT NULL
+    BEGIN
+        SELECT u.username, ch.user_id, ch.test_id, ch.score, ch.finish_time
+        FROM dbo.Class_history ch, User_info u
+        WHERE ch.test_id = @testID AND ch.class_id = @classID AND u.user_id=ch.user_id;
+    END
+    -- Scenario 4: Neither userID nor testID is provided
+    ELSE
+    BEGIN
+        SELECT user_id, test_id, score, finish_time
+        FROM dbo.Class_history;
+    END
+END
+GO;
+
+--Test get test result
+EXEC GetTestResults 14, 100, 2;

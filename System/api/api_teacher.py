@@ -59,3 +59,6 @@ def addTestToClass(class_id, test_id, duration):
     
 def deleteTestFromClass(class_id, test_id):
     return db_class.db_delete_test_from_class(test_id, class_id)
+
+def getTestResult(user_id, test_id, class_id):
+    return db_class.db_get_test_result(user_id, test_id, class_id)

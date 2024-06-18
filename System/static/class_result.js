@@ -3,8 +3,10 @@ document.getElementById("username").textContent = username;
 
 var currentPage = 0;
 var itemsPerPage = 7;
+var students_list = [];
 var current_student_list;
 var current_type;
+init();
 // Display the student's list
 
 function SingleOrDual() {
@@ -15,13 +17,13 @@ function SingleOrDual() {
     if(studentName === "" && testID === "") {
         DualSearch();
     } else {
-        SingleSearch();
+        SingleSearch(testID);
     }
 }
 
-function SingleSearch() {
-    var student_list = loadData();
-    current_student_list = loadData();
+function SingleSearch(test_id) {
+    var student_list = loadData(test_id);
+    current_student_list = loadData(test_id);
     current_type = 1;
     AddTable(student_list, 1);
     console.log("Single");
@@ -64,9 +66,11 @@ function AddTable(student_list, type) {
         if (index >= itemsPerPage * currentPage && index < itemsPerPage * (currentPage + 1)) {
             var newRow;
             if(type === 1) {
-                newRow = AddRow1(index + 1, student.name, student.sid, student.tid, student.result);
+                newRow = AddRow1(index + 1, student.username, student.user_id, student.test_id, student.score);
             } else if(type === 2) {
-                newRow = AddRow2(index + 1, student.name, student.sid, student.best_result, student.avg_result);
+                var avg_score = student.avg_score;
+                if(avg_score != null) avg_score = Number(avg_score).toFixed(1);
+                newRow = AddRow2(index + 1, student.username, student.user_id, student.max_score, avg_score);
             }
             tableBody.appendChild(newRow);
         }
@@ -178,55 +182,100 @@ function lastPage(current_student_list) {
     }
 }
 
-function loadData() {
-    // Sample data for demonstration
-    const students_list = [
-        { name: "Pham Quang Huy", sid: "20215207", tid: "10", result: "10" },
-        { name: "Tran Thuy Chau", sid: "20215182", tid: "10", result: "10" },
-        { name: "Nguyen Dang Duy", sid: "20210272", tid: "10", result: "10" },
-        { name: "Bui Duc Viet", sid: "20215254", tid: "10", result: "10" },
-        { name: "Hoang Van Khang", sid: "20215182", tid: "10", result: "10" },
-        { name: "Chu Xuan Minh", sid: "20235527", tid: "10", result: "10" },
-        { name: "Phan Ha Quyen", sid: "20225224", tid: "10", result: "10" },
-        { name: "Nguyen Manh Cuong", sid: "202151844", tid: "10", result: "10" },
-        { name: "Phan Dinh Trung", sid: "20230093", tid: "10", result: "10" },
-        { name: "Nguyen Hoang Viet", sid: "20220050", tid: "10", result: "10" },
-        { name: "Vu Thuong Tin", sid: "20230091", tid: "10", result: "10" },
-        { name: "Nguyen Thuy Anh", sid: "20215306", tid: "10", result: "10" },
-        { name: "Nguyen Cong Duy", sid: "20215188", tid: "10", result: "10" },
-        { name: "Do Hong Hai", sid: "20215199", tid: "10", result: "10" },
-        { name: "Tran Quang Hung", sid: "20235502", tid: "10", result: "10" },
-        { name: "Do Dang Vu", sid: "20235578", tid: "10", result: "10" }
-    ];
-    return students_list; 
+function loadData(test_id) {
+    fetch('http://localhost:5000/get_test_result', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            class_id: localStorage.getItem('class_id'),
+            test_id: localStorage.getItem('test_id')
+        })
+    })
 }
 
 function loadData2() {
-    const students_list = [
-        { name: "Pham Quang Huy", sid: "20215207", best_result: "10", avg_result: "10" },
-        { name: "Tran Thuy Chau", sid: "20215182", best_result: "10", avg_result: "10" },
-        { name: "Nguyen Dang Duy", sid: "20210272", best_result: "10", avg_result: "10" },
-        { name: "Bui Duc Viet", sid: "20215254", best_result: "10", avg_result: "10" },
-        { name: "Hoang Van Khang", sid: "20215182", best_result: "10", avg_result: "10" },
-        { name: "Chu Xuan Minh", sid: "20235527", best_result: "10", avg_result: "10" },
-        { name: "Phan Ha Quyen", sid: "20225224", best_result: "10", avg_result: "10" },
-        { name: "Nguyen Manh Cuong", sid: "202151844", best_result: "10", avg_result: "10" },
-        { name: "Phan Dinh Trung", sid: "20230093", best_result: "10", avg_result: "10" },
-        { name: "Nguyen Hoang Viet", sid: "20220050", best_result: "10", avg_result: "10" },
-        { name: "Vu Thuong Tin", sid: "20230091", best_result: "10", avg_result: "10" },
-        { name: "Nguyen Thuy Anh", sid: "20215306", best_result: "10", avg_result: "10" },
-        { name: "Nguyen Cong Duy", sid: "20215188", best_result: "10", avg_result: "10" },
-        { name: "Do Hong Hai", sid: "20215199", best_result: "10", avg_result: "10" },
-        { name: "Tran Quang Hung", sid: "20235502", best_result: "10", avg_result: "10" },
-        { name: "Do Dang Vu", sid: "20235578", best_result: "10", avg_result: "10" }
-    ];
-    return students_list;
+    fetch('http://localhost:5000/get_class_info?'+'c_id=' + localStorage.getItem('class_id') , {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        students_list = data.students;
+        console.log(data);
+        return students_list;
+    });
+}
+
+// function loadData() {
+//     // Sample data for demonstration
+//     const students_list = [
+//         { name: "Pham Quang Huy", sid: "20215207", tid: "10", result: "10" },
+//         { name: "Tran Thuy Chau", sid: "20215182", tid: "10", result: "10" },
+//         { name: "Nguyen Dang Duy", sid: "20210272", tid: "10", result: "10" },
+//         { name: "Bui Duc Viet", sid: "20215254", tid: "10", result: "10" },
+//         { name: "Hoang Van Khang", sid: "20215182", tid: "10", result: "10" },
+//         { name: "Chu Xuan Minh", sid: "20235527", tid: "10", result: "10" },
+//         { name: "Phan Ha Quyen", sid: "20225224", tid: "10", result: "10" },
+//         { name: "Nguyen Manh Cuong", sid: "202151844", tid: "10", result: "10" },
+//         { name: "Phan Dinh Trung", sid: "20230093", tid: "10", result: "10" },
+//         { name: "Nguyen Hoang Viet", sid: "20220050", tid: "10", result: "10" },
+//         { name: "Vu Thuong Tin", sid: "20230091", tid: "10", result: "10" },
+//         { name: "Nguyen Thuy Anh", sid: "20215306", tid: "10", result: "10" },
+//         { name: "Nguyen Cong Duy", sid: "20215188", tid: "10", result: "10" },
+//         { name: "Do Hong Hai", sid: "20215199", tid: "10", result: "10" },
+//         { name: "Tran Quang Hung", sid: "20235502", tid: "10", result: "10" },
+//         { name: "Do Dang Vu", sid: "20235578", tid: "10", result: "10" }
+//     ];
+//     return students_list; 
+// }
+
+// function loadData2() {
+//     const students_list = [
+//         { name: "Pham Quang Huy", sid: "20215207", best_result: "10", avg_result: "10" },
+//         { name: "Tran Thuy Chau", sid: "20215182", best_result: "10", avg_result: "10" },
+//         { name: "Nguyen Dang Duy", sid: "20210272", best_result: "10", avg_result: "10" },
+//         { name: "Bui Duc Viet", sid: "20215254", best_result: "10", avg_result: "10" },
+//         { name: "Hoang Van Khang", sid: "20215182", best_result: "10", avg_result: "10" },
+//         { name: "Chu Xuan Minh", sid: "20235527", best_result: "10", avg_result: "10" },
+//         { name: "Phan Ha Quyen", sid: "20225224", best_result: "10", avg_result: "10" },
+//         { name: "Nguyen Manh Cuong", sid: "202151844", best_result: "10", avg_result: "10" },
+//         { name: "Phan Dinh Trung", sid: "20230093", best_result: "10", avg_result: "10" },
+//         { name: "Nguyen Hoang Viet", sid: "20220050", best_result: "10", avg_result: "10" },
+//         { name: "Vu Thuong Tin", sid: "20230091", best_result: "10", avg_result: "10" },
+//         { name: "Nguyen Thuy Anh", sid: "20215306", best_result: "10", avg_result: "10" },
+//         { name: "Nguyen Cong Duy", sid: "20215188", best_result: "10", avg_result: "10" },
+//         { name: "Do Hong Hai", sid: "20215199", best_result: "10", avg_result: "10" },
+//         { name: "Tran Quang Hung", sid: "20235502", best_result: "10", avg_result: "10" },
+//         { name: "Do Dang Vu", sid: "20235578", best_result: "10", avg_result: "10" }
+//     ];
+//     return students_list;
+// }
+
+// Initial render
+function init() {
+    // Fetch student list from the server
+    fetch('http://localhost:5000/get_class_info?'+'c_id=' + localStorage.getItem('class_id') , {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        students_list = data.students;
+        console.log(data);
+        AddTable(students_list, 2);
+    });
 }
 
 // Initial render
-AddTable(loadData2(), 2);
-current_student_list = loadData2();
-current_type = 2;
+// AddTable(loadData2(), 2);
+// current_student_list = loadData2();
+// current_type = 2;
 
 // Event listeners for navigation buttons
 document.getElementById("prevBtn").addEventListener("click", function() {

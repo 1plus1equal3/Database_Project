@@ -231,3 +231,21 @@ def db_delete_test_from_class(testID, classID):
         return {'success': False, 'message': 'The test is not in the class.'}
     elif result[0] == 1:
         return {'success': True, 'message': 'Test removed from class successfully'}
+    
+def db_get_test_result(studentID, testID, classID):
+    cursor = conn.cursor()
+    # Get student_number and test_number
+    query = 'EXEC dbo.getTestResults @userID = ?, @testID = ?, @classID = ?'
+    cursor.execute(query, studentID, testID, classID)
+    results = cursor.fetchall()
+    # Format the results
+    result_list = []
+    for result in results:
+        result_info = {
+            'username': result.username,
+            'user_id': result.user_id,
+            'test_id': result.test_id,
+            'score': result.score,
+        }
+        result_list.append(result_info)
+    return result_list

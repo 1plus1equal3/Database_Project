@@ -122,6 +122,10 @@ def delete_student_from_class_html():
 def class_test_html():
     return render_template('class_test.html')
 
+@app.route('/class_result.html')
+def class_results_html():
+    return render_template('class_result.html')
+
 # API endpoints
 @app.route('/register', methods=['POST'])
 def register():
@@ -321,6 +325,14 @@ def delete_test_from_class():
     test_id = request.get_json()['test_id']
     response = api_teacher.deleteTestFromClass(class_id, test_id)
     return response
+
+@app.route('/get_test_result', methods=['POST'])
+def get_test_result():
+    class_id = request.get_json()['class_id']
+    user_id = request.get_json()['user_id']
+    test_id = request.get_json()['test_id']
+    result = api_teacher.getTestResult(user_id, test_id, class_id)
+    return result
 
 # Start server
 if __name__ == '__main__':

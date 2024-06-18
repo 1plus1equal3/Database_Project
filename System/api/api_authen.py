@@ -3,7 +3,7 @@ from db.authentication import authen
 
 ### Authentication APIS ###
 def register_user(user):
-    records = authen.register_user(user)
+    records = authen.db_register(user)
     msg = ''
     if records[0] == -1:
         msg = jsonify({'success': False, 'error': 'Username already exists'})
